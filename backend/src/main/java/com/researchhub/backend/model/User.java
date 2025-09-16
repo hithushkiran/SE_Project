@@ -1,43 +1,53 @@
+
 package com.researchhub.backend.model;
 
+import com.researchhub.backend.util.UuidBinaryConverter;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@Table(name = "users")
 public class User {
+
     @Id
-    @GeneratedValue
+    @Column(name = "id", columnDefinition = "BINARY(16)")
+    @Convert(converter = UuidBinaryConverter.class)
     private UUID id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
 
-    private boolean emailVerified;
+    @Column(name = "email_verified")
+    private boolean emailVerified = false;
 
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = createdAt;
+        this.id = UUID.randomUUID();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = createdAt;
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 }
-
-
