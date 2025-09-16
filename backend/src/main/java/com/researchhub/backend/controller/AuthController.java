@@ -1,51 +1,63 @@
 package com.researchhub.backend.controller;
 
-import com.researchhub.backend.dto.RegisterRequest;
-import com.researchhub.backend.dto.LoginRequest;
-import com.researchhub.backend.model.Role;
-import com.researchhub.backend.model.User;
-import com.researchhub.backend.repository.UserRepository;
+import com.researchhub.backend.dto.*;
+import com.researchhub.backend.service.AuthService;
+import com.researchhub.backend.service.UserService;
+import com.researchhub.backend.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthService authService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            return ResponseEntity.status(409).body("Email already exists");
-        }
+    @Autowired
+    private JwtUtil jwtUtil;
 
-        User user = new User();
-        user.setEmail(request.getEmail());
-        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.USER);
-        userRepository.save(user);
-
-        return ResponseEntity.ok("Registration successful");
+    @PostMapping("/signup")
+    public void signup(@RequestBody RegisterRequest request, HttpServletResponse response) {
+        authService.signup(request, response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+    public void login(@RequestBody LoginRequest request, HttpServletResponse response) {
+        authService.login(request, response);
+    }
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
-            throw new RuntimeException("Invalid credentials");
-        }
+    @PostMapping("/logout")
+    public void logout(HttpServletResponse response) {
+        authService.logout(response);
+    }
 
-        // TODO: Generate JWT token here
-        return ResponseEntity.ok("Login successful");
+    @PostMapping("/forgot-password")
+    public void forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        // Stub: EmailService can be used here
+    }
+
+    @PostMapping("/reset-password")
+    public void resetPassword(@RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request);
+    }
+
+    @GetMapping("/profile")
+    public UserResponse getProfile(HttpServletRequest request) {
+        UUID userId = jwtUtil.extractUserIdFromRequest(request);
+        return userService.getProfile(userId);
+    }
+
+    @PutMapping("/profile")
+    public void updateProfile(@RequestBody UpdateProfileRequest request, HttpServletRequest httpRequest) {
+        UUID userId = jwtUtil.extractUserIdFromRequest(httpRequest);
+        userService.updateProfile(userId, request);
     }
 }
