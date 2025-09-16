@@ -1,6 +1,21 @@
 
 import React from 'react';
 import './App.css';
+import ProfilePage from './components/ProfilePage';
+
+function App() {
+  return (
+    <div className="App">
+      <ProfilePage />
+    </div>
+  );
+}
+
+export default App;
+
+
+import React from 'react';
+import './App.css';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import MainContent from './components/MainContent';
@@ -31,4 +46,5 @@ function App() {
 }
 
 export default App
+
 
