@@ -1,3 +1,4 @@
+
 .app {
   min-height: 100vh;
   background-color: #f8f9fa;
@@ -13,4 +14,9 @@
   .app-body {
     flex-direction: column;
   }
+
+.App {
+  width: 100%;
+  min-height: 100vh;
+
 }

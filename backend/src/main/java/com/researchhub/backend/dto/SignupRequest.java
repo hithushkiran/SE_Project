@@ -3,11 +3,10 @@ package com.researchhub.backend.dto;
 import lombok.Data;
 
 @Data
-public class RegisterRequest {
+public class SignupRequest {
+    private String name;
     private String email;
     private String password;
-    private String fullName;
 }
-
 
 

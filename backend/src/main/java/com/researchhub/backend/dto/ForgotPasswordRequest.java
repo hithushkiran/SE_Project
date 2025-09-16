@@ -1,13 +1,11 @@
+
 package com.researchhub.backend.dto;
 
 import lombok.Data;
 
 @Data
-public class RegisterRequest {
+public class ForgotPasswordRequest {
     private String email;
-    private String password;
-    private String fullName;
 }
-
 
 

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import './App.css';
 import Header from './components/Header';
@@ -17,3 +18,17 @@ function App() {
 }
 
 export default App;
+
+import './App.css'
+import LoginPage from './LoginPage'
+
+function App() {
+  return (
+    <div className="App">
+      <LoginPage />
+    </div>
+  )
+}
+
+export default App
+
