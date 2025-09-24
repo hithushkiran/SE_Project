@@ -1,17 +1,19 @@
 package com.researchhub.backend.util;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Date;
 import java.util.UUID;
 
 @Component
 public class JwtUtil {
 
-    private final String SECRET = "your-secret-key"; // Replace with a secure key from application.properties
+    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Secure 256-bit key
     private final long EXPIRATION = 86400000; // 1 day in milliseconds
 
     // Generate JWT token from user ID
@@ -20,15 +22,16 @@ public class JwtUtil {
                 .setSubject(userId.toString())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
-                .signWith(SignatureAlgorithm.HS256, SECRET)
+                .signWith(key)
                 .compact();
     }
 
     // Validate token and extract user ID
     public UUID validateTokenAndGetUserId(String token) {
         try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(SECRET)
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
                     .parseClaimsJws(token)
                     .getBody();
             return UUID.fromString(claims.getSubject());
@@ -68,6 +71,3 @@ public class JwtUtil {
         throw new RuntimeException("JWT cookie not found");
     }
 }
-
-
-

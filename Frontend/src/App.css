@@ -1,0 +1,34 @@
+.app {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.app-body {
+  display: flex;
+  min-height: calc(100vh - 64px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .app-body {
+    flex-direction: column;
+  }
+}
+
+.app-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: #666;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #666;
+}

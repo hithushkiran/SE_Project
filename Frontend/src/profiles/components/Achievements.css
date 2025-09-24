@@ -1,0 +1,43 @@
+.achievements-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  padding: 24px;
+}
+
+.achievements-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 16px;
+}
+
+.achievements-content {
+  text-align: center;
+  padding: 48px 0;
+}
+
+.trophy-icon {
+  width: 64px;
+  height: 64px;
+  background-color: #f3f4f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+}
+
+.trophy {
+  width: 32px;
+  height: 32px;
+  color: #9ca3af;
+}
+
+.achievements-text {
+  color: #6b7280;
+  font-size: 14px;
+  margin: 0;
+}
+
