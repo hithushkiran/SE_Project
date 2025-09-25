@@ -6,7 +6,6 @@ import com.researchhub.backend.model.Profile;
 import com.researchhub.backend.model.User;
 import com.researchhub.backend.repository.ProfileRepository;
 import com.researchhub.backend.repository.UserRepository;
-import com.researchhub.backend.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +20,7 @@ public class UserService {
     @Autowired
     private ProfileRepository profileRepository;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    
 
     public UserResponse getProfile(UUID userId) {
         User user = userRepository.findById(userId).orElseThrow();

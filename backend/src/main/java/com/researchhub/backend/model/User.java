@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -38,6 +40,15 @@ public class User {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    // Library of saved papers for this user
+    @ManyToMany
+    @JoinTable(
+            name = "user_library",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id", columnDefinition = "BINARY(16)"),
+            inverseJoinColumns = @JoinColumn(name = "paper_id", referencedColumnName = "id", columnDefinition = "BINARY(16)")
+    )
+    private Set<Paper> library = new HashSet<>();
 
     @PrePersist
     protected void onCreate() {
