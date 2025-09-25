@@ -93,17 +93,9 @@
   border-radius: 50%;
 }
 
-.browser-dot.red {
-  background-color: #f87171;
-}
-
-.browser-dot.yellow {
-  background-color: #fbbf24;
-}
-
-.browser-dot.green {
-  background-color: #34d399;
-}
+.browser-dot.red { background-color: #f87171; }
+.browser-dot.yellow { background-color: #fbbf24; }
+.browser-dot.green { background-color: #34d399; }
 
 .browser-content {
   display: flex;
@@ -112,20 +104,10 @@
   gap: 16px;
 }
 
-.pen-icon {
-  position: relative;
-}
+.pen-icon { position: relative; }
+.pen-svg { width: 32px; height: 32px; color: #2563eb; }
 
-.pen-svg {
-  width: 32px;
-  height: 32px;
-  color: #2563eb;
-}
-
-.magnifying-glass {
-  position: relative;
-}
-
+.magnifying-glass { position: relative; }
 .glass-circle {
   width: 48px;
   height: 48px;
@@ -133,7 +115,6 @@
   border-radius: 50%;
   position: relative;
 }
-
 .glass-handle {
   position: absolute;
   bottom: -4px;
@@ -150,3 +131,4 @@
   font-size: 18px;
   margin: 0;
 }
+

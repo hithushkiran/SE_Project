@@ -27,3 +27,4 @@ const NavigationTabs = ({ activeTab, setActiveTab }) => {
 };
 
 export default NavigationTabs;
+

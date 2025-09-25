@@ -19,9 +19,7 @@
   gap: 16px;
 }
 
-.profile-picture {
-  position: relative;
-}
+.profile-picture { position: relative; }
 
 .avatar {
   width: 80px;
@@ -48,10 +46,7 @@
   font-weight: 500;
 }
 
-.profile-details {
-  display: flex;
-  flex-direction: column;
-}
+.profile-details { display: flex; flex-direction: column; }
 
 .profile-name {
   font-size: 24px;
@@ -60,10 +55,7 @@
   margin: 0 0 8px 0;
 }
 
-.profile-status {
-  color: #6b7280;
-  margin: 0 0 8px 0;
-}
+.profile-status { color: #6b7280; margin: 0 0 8px 0; }
 
 .member-info {
   display: flex;
@@ -73,16 +65,9 @@
   margin-bottom: 12px;
 }
 
-.member-info .icon {
-  width: 16px;
-  height: 16px;
-  margin-right: 4px;
-}
+.member-info .icon { width: 16px; height: 16px; margin-right: 4px; }
 
-.social-links {
-  display: flex;
-  gap: 12px;
-}
+.social-links { display: flex; gap: 12px; }
 
 .social-link {
   width: 24px;
@@ -94,11 +79,7 @@
   justify-content: center;
 }
 
-.social-icon {
-  width: 12px;
-  height: 12px;
-  color: #6b7280;
-}
+.social-icon { width: 12px; height: 12px; color: #6b7280; }
 
 .edit-button {
   display: flex;
@@ -113,11 +94,7 @@
   transition: background-color 0.15s ease;
 }
 
-.edit-button:hover {
-  background-color: #f9fafb;
-}
+.edit-button:hover { background-color: #f9fafb; }
 
-.edit-icon {
-  width: 16px;
-  height: 16px;
-}
+.edit-icon { width: 16px; height: 16px; }
+
