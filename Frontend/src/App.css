@@ -3,6 +3,8 @@
 .app {
   min-height: 100vh;
   background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
 }
 
 .app-body {
