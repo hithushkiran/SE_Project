@@ -50,10 +50,7 @@ public class AuthController {
     }
 
 
-    @PostMapping("/achievements")
-    public void resetPassword(@RequestBody ResetPasswordRequest request) {
-        authService.resetPassword(request);
-    }
+
 
     @GetMapping("/profile")
     public UserResponse getProfile(HttpServletRequest request) {
