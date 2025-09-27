@@ -1,0 +1,268 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+.page {
+  min-height: 100vh;
+  background: radial-gradient(1200px 600px at 60% 10%, #eaf2ff 0%, #ecf2ff 30%, #f8fbff 60%, #ffffff 100%);
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 12px auto 0 auto;
+  padding: 0 20px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+  backdrop-filter: saturate(180%) blur(14px);
+}
+
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-text { font-weight: 600; color: #0f172a; letter-spacing: 0.2px; }
+.bold { font-weight: 800; }
+
+.nav-actions { display: flex; align-items: center; gap: 12px; }
+
+.link-btn {
+  background: transparent;
+  border: none;
+  color: #0f172a;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.signup-btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(37, 99, 235, 0.3);
+  color: white;
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hero {
+  max-width: 1200px;
+  margin: 64px auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.hero-left h1 {
+  font-size: 64px;
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+  margin-bottom: 18px;
+}
+
+.hero-left p { color: #475569; font-size: 18px; line-height: 1.65; max-width: 520px; }
+
+.cta-buttons { margin-top: 28px; display: flex; gap: 16px; }
+
+.primary-btn {
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: none;
+  color: white;
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.secondary-btn {
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tagline { margin-top: 20px; color: #1f2937; font-weight: 500; }
+
+.hero-right { position: relative; height: 420px; }
+.card-stack { position: relative; width: 100%; height: 100%; }
+
+.card {
+  position: absolute;
+  right: 0;
+  width: min(560px, 100%);
+  height: 88%;
+  background: white;
+  border-radius: 18px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 30px 60px rgba(2, 6, 23, 0.12);
+  overflow: hidden;
+}
+
+.card-back { transform: translateY(-26px) translateX(-18px); opacity: 0.7; }
+.card-mid { transform: translateY(-10px) translateX(-10px); opacity: 0.9; }
+.card-front { transform: translateY(6px); }
+
+.card-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 56px;
+  padding: 0 16px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e5e7eb;
+  font-weight: 700;
+  color: #0f172a;
+}
+.tab-icon { width: 20px; display: inline-flex; justify-content: center; }
+.tab-text { font-size: 16px; }
+.card-body { flex: 1; height: calc(100% - 56px); background: white; }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+
+.modal {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 30px 60px rgba(2, 6, 23, 0.25);
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.modal-header h3 { margin: 0; font-size: 18px; color: #0f172a; }
+
+.modal-close {
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  color: #334155;
+}
+
+.modal-form { padding: 18px; }
+.input-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.input-row label { font-size: 14px; color: #334155; font-weight: 600; }
+.input-row input { padding: 12px 14px; border: 1px solid #e2e8f0; border-radius: 10px; background: white; font-size: 15px; }
+
+.modal-primary {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+}
+
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr; gap: 32px; }
+  .hero-right { height: 360px; }
+  .hero-left h1 { font-size: 44px; }
+}
+
+@media (max-width: 640px) {
+  .navbar { margin: 8px 12px 0 12px; }
+  .hero { margin: 40px auto; }
+  .hero-left h1 { font-size: 36px; }
+}
+
+/* Add these to your existing LoginPage.css */
+
+/* Improved modal form styling */
+.modal-form {
+  padding: 18px;
+}
+
+.input-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.input-row label {
+  font-size: 14px;
+  color: #334155;
+  font-weight: 600;
+}
+
+.input-row input,
+.input-row textarea {
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: white;
+  font-size: 15px;
+  transition: border-color 0.2s;
+}
+
+.input-row input:focus,
+.input-row textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-actions button:first-child {
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.modal-actions button:first-child:hover {
+  background: #f1f5f9;
+}
+
+.modal-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
