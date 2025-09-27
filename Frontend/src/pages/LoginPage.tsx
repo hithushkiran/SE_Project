@@ -7,7 +7,7 @@ const Logo = () => (
     <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
       <path fill="#3b82f6" d="M9 2h6v2l-3 5 5 9c.3.54-.1 1.2-.73 1.2H7.73c-.63 0-1.03-.66-.73-1.2l5-9-3-5z"/>
     </svg>
-    <span className="brand-text">Research<span className="bold">Hub</span></span>
+    <span className="brand-text">Synthesis</span>
   </div>
 );
 
