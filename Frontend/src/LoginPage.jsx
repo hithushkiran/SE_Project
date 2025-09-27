@@ -33,6 +33,7 @@ const Modal = ({ mode, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     // placeholder submit; integrate real auth later
+    //localhost:8081/api/auth/login
     console.log(mode === 'login' ? 'Login' : 'Sign up', { email, password })
     onClose()
   }

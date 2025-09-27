@@ -49,6 +49,12 @@ public class AuthController {
         authService.resetPassword(request);
     }
 
+
+    @PostMapping("/achievements")
+    public void resetPassword(@RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request);
+    }
+
     @GetMapping("/profile")
     public UserResponse getProfile(HttpServletRequest request) {
         UUID userId = jwtUtil.extractUserIdFromRequest(request);
