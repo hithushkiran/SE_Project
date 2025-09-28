@@ -34,13 +34,15 @@ public class PaperController {
      */
     @PostMapping("/upload")
     public ResponseEntity<ApiResponse<PaperResponse>> uploadPaper(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam(value = "title", required = false) String title,
-            @RequestParam(value = "author", required = false) String author,
-            Authentication authentication) {
+        @RequestParam("file") MultipartFile file,
+        @RequestParam(value = "title", required = false) String title,
+        @RequestParam(value = "author", required = false) String author,
+        @RequestParam(value = "publicationYear", required = false) Integer publicationYear,
+        @RequestParam(value = "abstractText", required = false) String abstractText,
+        Authentication authentication) {
 
         try {
-            Paper savedPaper = paperService.uploadPaper(file, title, author);
+            Paper savedPaper = paperService.uploadPaper(file, title, author, publicationYear, abstractText);
             PaperResponse response = paperResponseService.toPaperResponse(savedPaper);
 
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -63,14 +65,16 @@ public class PaperController {
      */
     @PostMapping("/upload-with-categories")
     public ResponseEntity<ApiResponse<PaperResponse>> uploadPaperWithCategories(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam(value = "title", required = false) String title,
-            @RequestParam(value = "author", required = false) String author,
-            @RequestParam(value = "categoryIds", required = false) List<UUID> categoryIds,
-            Authentication authentication) {
+        @RequestParam("file") MultipartFile file,
+        @RequestParam(value = "title", required = false) String title,
+        @RequestParam(value = "author", required = false) String author,
+        @RequestParam(value = "publicationYear", required = false) Integer publicationYear,
+        @RequestParam(value = "abstractText", required = false) String abstractText,
+        @RequestParam(value = "categoryIds", required = false) List<UUID> categoryIds,
+        Authentication authentication) {
 
         try {
-            Paper savedPaper = paperService.uploadPaperWithCategories(file, title, author, categoryIds);
+            Paper savedPaper = paperService.uploadPaperWithCategories(file, title, author, publicationYear, abstractText, categoryIds);
             PaperResponse response = paperResponseService.toPaperResponse(savedPaper);
 
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -151,7 +155,6 @@ public class PaperController {
             Authentication authentication) {
 
         try {
-            UUID userId = getUserIdFromAuthentication(authentication);
             Paper paper = paperService.assignCategoriesToPaper(paperId, request.getCategoryIds());
             PaperResponse response = paperResponseService.toPaperResponse(paper);
 

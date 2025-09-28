@@ -39,7 +39,8 @@ public class MockDataService {
             paper.setAuthor(author);
             paper.setAbstractText(abstractText);
             paper.setPublicationYear(year);
-            paper.setFilePath("uploads/" + title.replace(" ", "-").toLowerCase() + ".pdf");
+            // Use a real file that exists in uploads
+            paper.setFilePath("uploads/advanced-machine-learning-techniques.pdf");
 
             paperRepository.save(paper);
             System.out.println("Created paper: " + title);

@@ -33,6 +33,16 @@ public class PaperService {
 
     @Transactional
     public Paper uploadPaper(MultipartFile file, String title, String author) throws IOException {
+        // Delegate to the full method with null year & abstract
+        return uploadPaper(file, title, author, null, null);
+    }
+
+    /**
+     * Overloaded upload accepting publicationYear & abstractText.
+     * If publicationYear is null or invalid (< 1900 or > current year +1), it will be set to current year.
+     */
+    @Transactional
+    public Paper uploadPaper(MultipartFile file, String title, String author, Integer publicationYear, String abstractText) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File must not be empty");
         }
@@ -48,11 +58,23 @@ public class PaperService {
         Path destination = uploadPath.resolve(filename);
         Files.copy(file.getInputStream(), destination);
 
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        Integer safeYear = publicationYear;
+        if (safeYear != null) {
+            if (safeYear < 1900 || safeYear > currentYear + 1) {
+                safeYear = currentYear; // sanitize
+            }
+        }
+
         // Persist paper metadata
         Paper paper = new Paper();
         paper.setTitle(title != null && !title.isBlank() ? title : (original != null ? original.replace(extension, "") : "Untitled"));
         paper.setAuthor(author);
         paper.setFilePath(destination.toString());
+        paper.setPublicationYear(safeYear != null ? safeYear : currentYear); // auto year if missing
+        if (abstractText != null && !abstractText.isBlank()) {
+            paper.setAbstractText(abstractText.trim());
+        }
 
         return paperRepository.save(paper);
     }
@@ -91,10 +113,22 @@ public class PaperService {
      */
     @Transactional
     public Paper uploadPaperWithCategories(MultipartFile file, String title, String author, List<UUID> categoryIds) throws IOException {
-        // First upload the paper
         Paper paper = uploadPaper(file, title, author);
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            paper = assignCategoriesToPaper(paper.getId(), categoryIds);
+        }
+        return paper;
+    }
 
-        // Then assign categories if provided
+    /**
+     * Overload supporting publicationYear & abstractText.
+     */
+    public Paper uploadPaperWithCategories(MultipartFile file, String title, String author,
+                                           Integer publicationYear, String abstractText,
+                                           List<UUID> categoryIds) throws IOException {
+        // First upload with extended metadata
+        Paper paper = uploadPaper(file, title, author, publicationYear, abstractText);
+
         if (categoryIds != null && !categoryIds.isEmpty()) {
             paper = assignCategoriesToPaper(paper.getId(), categoryIds);
         }

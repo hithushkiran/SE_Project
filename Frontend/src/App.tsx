@@ -8,6 +8,7 @@ import MainContent from './components/MainContent';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import ExplorePage from './pages/ExplorePage';
+// import PaperDetailsPage from './pages/PaperDetailsPage';
 import './App.css';
 
 // Dashboard component that requires authentication
@@ -73,6 +74,15 @@ const AppContent: React.FC = () => {
             </ProtectedRoute>
           } 
         />
+        
+        {/* <Route 
+          path="/papers/:id" 
+          element={
+            <ProtectedRoute>
+              <PaperDetailsPage />
+            </ProtectedRoute>
+          } 
+        /> */}
         
         {/* Default redirect */}
         <Route 

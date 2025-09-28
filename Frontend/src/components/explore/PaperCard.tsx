@@ -1,6 +1,7 @@
 import React from 'react';
 import { PaperResponse } from '../../types/explore';
 import './PaperCard.css';
+// import { useNavigate } from 'react-router-dom';
 
 interface PaperCardProps {
   paper: PaperResponse;
@@ -8,6 +9,7 @@ interface PaperCardProps {
 }
 
 const PaperCard: React.FC<PaperCardProps> = ({ paper, onClick }) => {
+  // const navigate = useNavigate();
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
