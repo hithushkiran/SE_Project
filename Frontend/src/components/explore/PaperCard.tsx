@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PaperResponse } from '../../types/explore';
+import { commentService } from '../../services/commentService';
 import './PaperCard.css';
-// import { useNavigate } from 'react-router-dom';
 
 interface PaperCardProps {
   paper: PaperResponse;
@@ -9,7 +10,28 @@ interface PaperCardProps {
 }
 
 const PaperCard: React.FC<PaperCardProps> = ({ paper, onClick }) => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [commentCount, setCommentCount] = useState<number>(0);
+  const [loadingCount, setLoadingCount] = useState(true);
+
+  // Load comment count when component mounts
+  useEffect(() => {
+    const loadCommentCount = async () => {
+      try {
+        const response = await commentService.getCommentCount(paper.id);
+        if (response.success) {
+          setCommentCount(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to load comment count:', error);
+      } finally {
+        setLoadingCount(false);
+      }
+    };
+    
+    loadCommentCount();
+  }, [paper.id]);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -31,11 +53,26 @@ const PaperCard: React.FC<PaperCardProps> = ({ paper, onClick }) => {
     console.log('Download paper:', paper.id);
   };
 
+  const handleCommentClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/papers/${paper.id}/comments`);
+  };
+
   return (
     <div className="paper-card" onClick={handleClick}>
       <div className="paper-header">
         <div className="paper-icon">📄</div>
         <div className="paper-actions">
+          <button 
+            className="comment-button"
+            onClick={handleCommentClick}
+            title="View comments"
+          >
+            💬
+            {!loadingCount && (
+              <span className="comment-count">{commentCount}</span>
+            )}
+          </button>
           <button 
             className="download-button"
             onClick={handleDownload}

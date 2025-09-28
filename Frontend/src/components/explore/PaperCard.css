@@ -57,6 +57,47 @@
   transform: scale(1.05);
 }
 
+.comment-button {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  position: relative;
+}
+
+.comment-button:hover {
+  background: #22c55e;
+  color: white;
+  transform: scale(1.05);
+}
+
+.comment-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.4rem;
+  border-radius: 10px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
 .paper-content {
   padding: 1rem;
   flex: 1;
@@ -186,6 +227,19 @@
     width: 28px;
     height: 28px;
     font-size: 0.75rem;
+  }
+  
+  .comment-button {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+  
+  .comment-count {
+    font-size: 0.6rem;
+    padding: 0.15rem 0.3rem;
+    min-width: 16px;
+    height: 16px;
   }
   
   .paper-content {

@@ -8,6 +8,7 @@ import MainContent from './components/MainContent';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import ExplorePage from './pages/ExplorePage';
+import CommentSection from './pages/CommentSection';
 // import PaperDetailsPage from './pages/PaperDetailsPage';
 import './App.css';
 
@@ -71,6 +72,15 @@ const AppContent: React.FC = () => {
           element={
             <ProtectedRoute>
               <ExplorePage />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/papers/:paperId/comments" 
+          element={
+            <ProtectedRoute>
+              <CommentSection />
             </ProtectedRoute>
           } 
         />
