@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { PaperResponse } from '../../types/explore';
 import { commentService } from '../../services/commentService';
 import './PaperCard.css';
@@ -44,6 +44,9 @@ const PaperCard: React.FC<PaperCardProps> = ({ paper, onClick }) => {
   const handleClick = () => {
     if (onClick) {
       onClick(paper);
+    } else {
+      // Default navigation to paper details
+      navigate(`/papers/${paper.id}`);
     }
   };
 
@@ -59,7 +62,18 @@ const PaperCard: React.FC<PaperCardProps> = ({ paper, onClick }) => {
   };
 
   return (
-    <div className="paper-card" onClick={handleClick}>
+    <div 
+      className="paper-card" 
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
+    >
       <div className="paper-header">
         <div className="paper-icon">📄</div>
         <div className="paper-actions">

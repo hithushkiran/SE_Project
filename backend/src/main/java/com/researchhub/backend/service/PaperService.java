@@ -70,7 +70,8 @@ public class PaperService {
         Paper paper = new Paper();
         paper.setTitle(title != null && !title.isBlank() ? title : (original != null ? original.replace(extension, "") : "Untitled"));
         paper.setAuthor(author);
-        paper.setFilePath(destination.toString());
+        // Store relative path for static resource access
+        paper.setFilePath(filename);
         paper.setPublicationYear(safeYear != null ? safeYear : currentYear); // auto year if missing
         if (abstractText != null && !abstractText.isBlank()) {
             paper.setAbstractText(abstractText.trim());
@@ -86,7 +87,7 @@ public class PaperService {
 
         // Remove physical file if exists
         if (paper.getFilePath() != null) {
-            Path path = Paths.get(paper.getFilePath());
+            Path path = Paths.get(uploadDir).resolve(paper.getFilePath());
             try {
                 Files.deleteIfExists(path);
             } catch (IOException e) {

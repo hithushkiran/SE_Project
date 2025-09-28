@@ -13,6 +13,12 @@ import java.util.stream.Collectors;
 public class PaperResponseService {
 
     public PaperResponse toPaperResponse(Paper paper) {
+        // Ensure filePath is in the correct format for static access
+        String filePath = paper.getFilePath();
+        if (filePath != null && !filePath.startsWith("uploads/")) {
+            filePath = "uploads/" + filePath;
+        }
+        
         return new PaperResponse(
                 paper.getId(),
                 paper.getTitle(),
@@ -20,7 +26,7 @@ public class PaperResponseService {
                 paper.getAbstractText(),
                 paper.getUploadedAt(),
                 paper.getPublicationYear(),
-                paper.getFilePath(),
+                filePath,
                 paper.getCategories()
                   // Add comment count
         );
