@@ -1,7 +1,9 @@
 package com.researchhub.backend.service;
 
 import com.researchhub.backend.exception.ResourceNotFoundException;
+import com.researchhub.backend.model.Category;
 import com.researchhub.backend.model.Paper;
+import com.researchhub.backend.repository.CategoryRepository;
 import com.researchhub.backend.repository.PaperRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class PaperService {
@@ -23,6 +25,11 @@ public class PaperService {
 
     @Autowired
     private PaperRepository paperRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    // ===== YOUR EXISTING METHODS =====
 
     @Transactional
     public Paper uploadPaper(MultipartFile file, String title, String author) throws IOException {
@@ -67,6 +74,111 @@ public class PaperService {
 
         paperRepository.delete(paper);
     }
-}
 
+    // ===== NEW METHODS NEEDED FOR CONTROLLER =====
+
+    public Paper getPaperById(UUID id) {
+        return paperRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Paper not found with id: " + id));
+    }
+
+    public List<Paper> getAllPapers() {
+        return paperRepository.findAll();
+    }
+
+    /**
+     * NEW: Upload paper with categories in one operation
+     */
+    @Transactional
+    public Paper uploadPaperWithCategories(MultipartFile file, String title, String author, List<UUID> categoryIds) throws IOException {
+        // First upload the paper
+        Paper paper = uploadPaper(file, title, author);
+
+        // Then assign categories if provided
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            paper = assignCategoriesToPaper(paper.getId(), categoryIds);
+        }
+
+        return paper;
+    }
+
+    /**
+     * NEW: Assign categories to an existing paper
+     */
+    @Transactional
+    public Paper assignCategoriesToPaper(UUID paperId, List<UUID> categoryIds) {
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new ResourceNotFoundException("Paper not found with id: " + paperId));
+
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            // Clear categories if empty list provided
+            paper.getCategories().clear();
+        } else {
+            // Get categories from database
+            List<Category> categories = categoryRepository.findByIdIn(categoryIds);
+            if (categories.size() != categoryIds.size()) {
+                throw new IllegalArgumentException("Some categories were not found");
+            }
+
+            // Clear existing categories and assign new ones
+            paper.getCategories().clear();
+            paper.getCategories().addAll(new HashSet<>(categories));
+        }
+
+        return paperRepository.save(paper);
+    }
+
+    /**
+     * NEW: Get categories for a paper
+     */
+    public Set<Category> getPaperCategories(UUID paperId) {
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new ResourceNotFoundException("Paper not found with id: " + paperId));
+
+        return paper.getCategories() != null ? paper.getCategories() : new HashSet<>();
+    }
+
+    /**
+     * NEW: Get recent papers (for explore system)
+     */
+    public List<Paper> getRecentPapers(int limit) {
+        List<Paper> allPapers = paperRepository.findAll();
+
+        // Sort by uploaded date (newest first) and limit results
+        return allPapers.stream()
+                .sorted((p1, p2) -> p2.getUploadedAt().compareTo(p1.getUploadedAt()))
+                .limit(limit)
+                .toList();
+    }
+
+    /**
+     * NEW: Search papers by keyword (basic search)
+     */
+    public List<Paper> searchPapers(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return paperRepository.findAll();
+        }
+
+        String searchTerm = query.toLowerCase().trim();
+        List<Paper> allPapers = paperRepository.findAll();
+
+        // Simple search in title, author, and abstract
+        return allPapers.stream()
+                .filter(paper ->
+                        (paper.getTitle() != null && paper.getTitle().toLowerCase().contains(searchTerm)) ||
+                                (paper.getAuthor() != null && paper.getAuthor().toLowerCase().contains(searchTerm)) ||
+                                (paper.getAbstractText() != null && paper.getAbstractText().toLowerCase().contains(searchTerm))
+                )
+                .toList();
+    }
+
+    /**
+     * NEW: Check if user can edit paper (for authorization)
+     */
+    public boolean canUserEditPaper(UUID paperId, UUID userId) {
+        // For now, return true - you can implement proper authorization later
+        // This would typically check if the user is the uploader or has admin role
+        return true;
+    }
+}
 

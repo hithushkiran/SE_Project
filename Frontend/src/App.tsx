@@ -7,6 +7,7 @@ import Sidebar from './components/Sidebar';
 import MainContent from './components/MainContent';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
+import ExplorePage from './pages/ExplorePage';
 import './App.css';
 
 // Dashboard component that requires authentication
@@ -60,6 +61,15 @@ const AppContent: React.FC = () => {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/explore" 
+          element={
+            <ProtectedRoute>
+              <ExplorePage />
             </ProtectedRoute>
           } 
         />
