@@ -101,9 +101,13 @@ const Modal: React.FC<ModalProps> = ({ mode, onClose }) => {
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                console.log('Password changed:', e.target.value);
+                setPassword(e.target.value);
+              }}
               required
               placeholder="••••••••"
+              autoComplete="current-password"
             />
           </div>
           
