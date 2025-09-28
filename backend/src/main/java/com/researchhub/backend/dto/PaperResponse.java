@@ -1,9 +1,17 @@
+
+
 package com.researchhub.backend.dto;
+
+import com.researchhub.backend.model.Category;
+
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+
+import java.util.Set;
+
 import java.util.UUID;
 
 @Data
@@ -12,17 +20,26 @@ public class PaperResponse {
     private UUID id;
     private String title;
     private String author;
-    private String filePath;
+
+    private String abstractSnippet;
     private LocalDateTime uploadedAt;
-    private int commentCount;
-    
-    public PaperResponse(UUID id, String title, String author, String filePath, 
-                        LocalDateTime uploadedAt, int commentCount) {
+    private Integer publicationYear;
+    private String filePath;
+    private Set<Category> categories;
+
+    public PaperResponse(UUID id, String title, String author, String abstractText,
+                         LocalDateTime uploadedAt, Integer publicationYear,
+                         String filePath, Set<Category> categories) {
         this.id = id;
         this.title = title;
         this.author = author;
-        this.filePath = filePath;
+        this.abstractSnippet = abstractText != null && abstractText.length() > 200
+                ? abstractText.substring(0, 200) + "..."
+                : abstractText;
         this.uploadedAt = uploadedAt;
-        this.commentCount = commentCount;
+        this.publicationYear = publicationYear;
+        this.filePath = filePath;
+        this.categories = categories;
     }
 }
+

@@ -1,5 +1,6 @@
 package com.researchhub.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.researchhub.backend.util.UuidBinaryConverter;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -35,13 +36,32 @@ public class Paper {
     @Column(name = "uploaded_at", nullable = false)
     private LocalDateTime uploadedAt;
 
+    @Column(name = "publication_year")
+    private Integer publicationYear;
+
+    @Column(name = "abstract_text", columnDefinition = "TEXT")
+    private String abstractText;
+
     // Users that saved this paper in their libraries
     @ManyToMany(mappedBy = "library")
+    @JsonIgnore
     private Set<User> savedByUsers = new HashSet<>();
+
+
+    // Categories associated with this paper
+    @ManyToMany
+    @JoinTable(
+            name = "paper_categories",
+            joinColumns = @JoinColumn(name = "paper_id", columnDefinition = "BINARY(16)"),
+            inverseJoinColumns = @JoinColumn(name = "category_id", columnDefinition = "BINARY(16)")
+    )
+    @JsonIgnore
+    private Set<Category> categories = new HashSet<>();
 
     // Comments on this paper
     @OneToMany(mappedBy = "paper", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
+
 
     @PrePersist
     protected void onCreate() {
@@ -49,5 +69,3 @@ public class Paper {
         this.uploadedAt = LocalDateTime.now();
     }
 }
-
-

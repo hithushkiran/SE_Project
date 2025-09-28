@@ -1,0 +1,128 @@
+.explore-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.explore-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.back-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.explore-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.explore-header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.explore-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.search-section {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: center;
+}
+
+.filter-toggle {
+  background: white;
+  border: 2px solid #e0e0e0;
+  color: #666;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.filter-toggle:hover {
+  border-color: #4285f4;
+  color: #4285f4;
+}
+
+.filter-toggle.active {
+  background: #4285f4;
+  border-color: #4285f4;
+  color: white;
+}
+
+.explore-main {
+  display: flex;
+  gap: 2rem;
+  position: relative;
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .header-content {
+    padding: 0 1rem;
+  }
+  
+  .explore-header h1 {
+    font-size: 2rem;
+  }
+  
+  .explore-header p {
+    font-size: 1rem;
+  }
+  
+  .explore-content {
+    padding: 0 1rem;
+  }
+  
+  .search-section {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .filter-toggle {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .explore-main {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

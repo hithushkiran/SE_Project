@@ -2,6 +2,7 @@ package com.researchhub.backend.service;
 
 import com.researchhub.backend.dto.UpdateProfileRequest;
 import com.researchhub.backend.dto.UserResponse;
+import com.researchhub.backend.model.Category;
 import com.researchhub.backend.model.Profile;
 import com.researchhub.backend.model.User;
 import com.researchhub.backend.repository.ProfileRepository;
@@ -9,6 +10,8 @@ import com.researchhub.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -51,4 +54,6 @@ public class UserService {
 
         profileRepository.save(profile);
     }
+
+
 }
