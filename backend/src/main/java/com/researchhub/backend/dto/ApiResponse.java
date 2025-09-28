@@ -11,6 +11,7 @@ public class ApiResponse<T> {
     private String message;
     private T data;
 
+
     public ApiResponse(boolean success, String message, T data) {
         this.success = success;
         this.message = message;
@@ -29,3 +30,5 @@ public class ApiResponse<T> {
         return new ApiResponse<>(false, message, null);
     }
 }
+
+    

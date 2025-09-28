@@ -1,12 +1,17 @@
 
+
 package com.researchhub.backend.dto;
 
 import com.researchhub.backend.model.Category;
+
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+
 import java.util.Set;
+
 import java.util.UUID;
 
 @Data
@@ -15,6 +20,7 @@ public class PaperResponse {
     private UUID id;
     private String title;
     private String author;
+
     private String abstractSnippet;
     private LocalDateTime uploadedAt;
     private Integer publicationYear;
@@ -36,3 +42,4 @@ public class PaperResponse {
         this.categories = categories;
     }
 }
+
