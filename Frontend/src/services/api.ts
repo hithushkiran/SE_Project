@@ -21,3 +21,9 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Papers API helpers
+export const getMyPublications = async (page: number = 0, size: number = 20) => {
+  const response = await api.get(`/papers/mine?page=${page}&size=${size}`);
+  return response.data;
+};

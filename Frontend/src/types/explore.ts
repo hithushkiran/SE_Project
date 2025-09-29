@@ -13,6 +13,7 @@ export interface PaperResponse {
   publicationYear: number | null;
   filePath: string;
   categories: CategoryResponse[];
+  canEdit?: boolean | null;
 }
 
 export interface ExploreFilters {

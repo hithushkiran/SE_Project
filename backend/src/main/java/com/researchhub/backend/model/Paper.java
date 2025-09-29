@@ -62,6 +62,12 @@ public class Paper {
     @OneToMany(mappedBy = "paper", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
+    // Uploader (owner) of this paper
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "uploaded_by", nullable = true, columnDefinition = "BINARY(16)")
+    @JsonIgnore
+    private User uploadedBy;
+
 
     @PrePersist
     protected void onCreate() {

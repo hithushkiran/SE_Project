@@ -7,6 +7,9 @@ import com.researchhub.backend.model.Category;
 import com.researchhub.backend.model.Paper;
 import com.researchhub.backend.service.PaperResponseService;
 import com.researchhub.backend.service.PaperService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +45,8 @@ public class PaperController {
         Authentication authentication) {
 
         try {
-            Paper savedPaper = paperService.uploadPaper(file, title, author, publicationYear, abstractText);
+            UUID uploaderId = authentication != null ? getUserIdFromAuthentication(authentication) : null;
+            Paper savedPaper = paperService.uploadPaper(file, title, author, publicationYear, abstractText, uploaderId);
             PaperResponse response = paperResponseService.toPaperResponse(savedPaper);
 
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -74,7 +78,8 @@ public class PaperController {
         Authentication authentication) {
 
         try {
-            Paper savedPaper = paperService.uploadPaperWithCategories(file, title, author, publicationYear, abstractText, categoryIds);
+            UUID uploaderId = authentication != null ? getUserIdFromAuthentication(authentication) : null;
+            Paper savedPaper = paperService.uploadPaperWithCategories(file, title, author, publicationYear, abstractText, categoryIds, uploaderId);
             PaperResponse response = paperResponseService.toPaperResponse(savedPaper);
 
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -230,5 +235,26 @@ public class PaperController {
             throw new RuntimeException("User not authenticated");
         }
         return UUID.fromString(authentication.getName());
+    }
+
+    /**
+     * NEW: Get authenticated user's papers (paged)
+     */
+    @GetMapping("/mine")
+    public ResponseEntity<ApiResponse<Page<PaperResponse>>> getMyPapers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            Authentication authentication) {
+
+        try {
+            UUID userId = getUserIdFromAuthentication(authentication);
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Paper> papers = paperService.getPapersByUploader(userId, pageable);
+            Page<PaperResponse> response = paperResponseService.toPaperResponse(papers);
+            return ResponseEntity.ok(ApiResponse.success(response));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("Failed to fetch your papers: " + e.getMessage()));
+        }
     }
 }
