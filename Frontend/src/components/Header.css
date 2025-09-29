@@ -6,6 +6,10 @@
   background-color: white;
   border-bottom: 1px solid #e0e0e0;
   height: 64px;
+  position: relative;
+  z-index: 1000;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .header-left {
@@ -17,16 +21,18 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  cursor: pointer;
 }
 
 .logo-icon {
-  font-size: 24px;
+  font-size: 28px;
+  color: #4CAF50;
 }
 
 .logo-text {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3e50;
 }
 
 .header-center {

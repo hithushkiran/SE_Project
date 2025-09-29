@@ -7,7 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -45,6 +47,7 @@ public class Paper {
     @JsonIgnore
     private Set<User> savedByUsers = new HashSet<>();
 
+
     // Categories associated with this paper
     @ManyToMany
     @JoinTable(
@@ -54,6 +57,17 @@ public class Paper {
     )
     @JsonIgnore
     private Set<Category> categories = new HashSet<>();
+
+    // Comments on this paper
+    @OneToMany(mappedBy = "paper", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
+
+    // Uploader (owner) of this paper
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "uploaded_by", nullable = true, columnDefinition = "BINARY(16)")
+    @JsonIgnore
+    private User uploadedBy;
+
 
     @PrePersist
     protected void onCreate() {
