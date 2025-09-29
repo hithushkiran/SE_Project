@@ -32,6 +32,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
+        // Allow CORS preflight to pass through without auth logic
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // If already authenticated, continue
         Authentication existingAuth = SecurityContextHolder.getContext().getAuthentication();
         if (existingAuth != null && existingAuth.isAuthenticated()) {

@@ -7,6 +7,8 @@ import com.researchhub.backend.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -50,9 +52,15 @@ public class AuthController {
     }
 
     @GetMapping("/profile")
-    public UserResponse getProfile(HttpServletRequest request) {
-        UUID userId = jwtUtil.extractUserIdFromRequest(request);
-        return userService.getProfile(userId);
+    public ResponseEntity<?> getProfile(HttpServletRequest request) {
+        try {
+            UUID userId = jwtUtil.extractUserIdFromRequest(request);
+            UserResponse profile = userService.getProfile(userId);
+            return ResponseEntity.ok(profile);
+        } catch (RuntimeException ex) {
+            // Missing / invalid JWT -> 401, not 500
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
     }
 
     @PutMapping("/profile")
