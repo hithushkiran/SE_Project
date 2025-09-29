@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../api/axios';
+import { multipartApi } from '../api/axios';
 import './PublishPage.css';
 
 const PublishPage = () => {
@@ -86,10 +86,7 @@ const PublishPage = () => {
         uploadData.append('bookId', formData.bookId);
       }
 
-      const response = await api.post('/api/papers/upload', uploadData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      const response = await multipartApi.post('/api/papers/upload', uploadData, {
         onUploadProgress: (progressEvent) => {
           const progress = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total

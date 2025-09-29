@@ -4,10 +4,16 @@ const API_BASE_URL = 'http://localhost:8080';
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
-  withCredentials: true, // Essential for JWT cookie authentication
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+// Separate instance for multipart (let browser set Content-Type with boundary)
+export const multipartApi = axios.create({
+  baseURL: API_BASE_URL,
+  withCredentials: true,
 });
 
 // Add response interceptor for error handling
