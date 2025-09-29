@@ -55,7 +55,7 @@ const PublishPage = () => {
       }));
       setError('');
     } else {
-      setError('Please select a valid PDF file');
+      setError('Select a valid PDF file please');
     }
   };
 
@@ -63,7 +63,7 @@ const PublishPage = () => {
     e.preventDefault();
     
     if (!formData.file) {
-      setError('Please select a PDF file to upload');
+      setError('Select a PDF file to upload please');
       return;
     }
 
