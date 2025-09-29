@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import React from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import MainContent from './components/MainContent';
+import PublishPage from './components/PublishPage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import ExplorePage from './pages/ExplorePage';
@@ -26,6 +27,7 @@ const Dashboard: React.FC = () => {
 // Main App component with routing
 const AppContent: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -35,11 +37,11 @@ const AppContent: React.FC = () => {
     );
   }
 
+  const isLoginRoute = location.pathname.startsWith('/login');
+
   return (
     <div className="app">
-      {/* Only show header on authenticated routes */}
-      {isAuthenticated && <Header />}
-      
+      {!isLoginRoute && <Header />}
       <Routes>
         {/* Public routes */}
         <Route 
@@ -56,7 +58,7 @@ const AppContent: React.FC = () => {
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
-          } 
+          }
         />
         
         <Route 
@@ -68,40 +70,45 @@ const AppContent: React.FC = () => {
           } 
         />
         
-        <Route 
-          path="/my-publications" 
+        <Route
+          path="/my-publications"
           element={
             <ProtectedRoute>
               <MyPublicationsPage />
             </ProtectedRoute>
-          } 
+          }
         />
-        
-        <Route 
-          path="/explore" 
+        <Route
+          path="/explore"
           element={
             <ProtectedRoute>
               <ExplorePage />
             </ProtectedRoute>
-          } 
+          }
         />
-        
-        <Route 
-          path="/papers/:paperId/comments" 
+        <Route
+          path="/papers/:paperId/comments"
           element={
             <ProtectedRoute>
               <CommentSection />
             </ProtectedRoute>
-          } 
+          }
         />
-        
-        <Route 
-          path="/papers/:id" 
+        <Route
+          path="/papers/:id"
           element={
             <ProtectedRoute>
               <PaperDetailsPage />
             </ProtectedRoute>
-          } 
+          }
+        />
+        <Route
+          path="/publish"
+          element={
+            <ProtectedRoute>
+              <PublishPage />
+            </ProtectedRoute>
+          }
         />
         
         {/* Default redirect */}

@@ -1,105 +1,219 @@
-.main-content {
-  flex: 1;
+ .main-content { flex:1; display:flex; margin-left:240px; padding:2rem; background-color:#f8f9fa; min-height:calc(100vh - 64px); position:relative; }
+
+/* Top Left Branding */
+.top-left-branding {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+}
+
+.researchhub-branding {
   display: flex;
-  background-color: #f8f9fa;
-  width: 100%;
-}
-
-.content-area {
-  flex: 1;
-  padding: 24px;
-  width: 100%;
-}
-
-.welcome-section {
-  background-color: white;
-  border-radius: 12px;
-  padding: 48px 32px;
-  text-align: center;
-  margin-bottom: 32px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.welcome-header h1 {
-  font-size: 32px;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.welcome-header h2 {
-  font-size: 18px;
-  font-weight: 400;
-  color: #666;
-  margin-bottom: 32px;
-}
-
-.envelope-icon {
-  font-size: 64px;
-  margin: 16px 0;
-  opacity: 0.3;
-}
-
-.mobile-tabs {
-  display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: white;
-  border-top: 1px solid #e0e0e0;
-  padding: 8px 16px;
+  align-items: center;
   gap: 8px;
 }
 
-.mobile-tab {
-  flex: 1;
-  background: none;
-  border: none;
-  padding: 12px 8px;
-  font-size: 12px;
-  color: #666;
-  border-radius: 8px;
+ .brand-logo { font-size:2rem; color:#4CAF50; }
+
+.brand-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 4rem;
+}
+
+/* Hero Section */
+.hero-section {
+  text-align: center;
+  margin-bottom: 4rem;
+  padding: 3rem 0;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  color: #6c757d;
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+.hero-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.envelope-icon {
+  font-size: 4rem;
+  opacity: 0.6;
+  color: #9c88ff;
+}
+
+/* Feature Cards */
+.feature-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.feature-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  transition: all 0.3s ease;
   cursor: pointer;
-  transition: all 0.2s;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.mobile-tab.active {
-  background-color: #e8f0fe;
-  color: #1a73e8;
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  border-color: rgba(102, 126, 234, 0.2);
+}
+
+.card-icon {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.document-icon,
+.summarize-icon,
+.info-icon {
+  font-size: 3rem;
+  opacity: 0.8;
+}
+
+.rocket-icon {
+  font-size: 3rem;
+  opacity: 0.9;
+}
+
+.card-title {
+  font-size: 1.5rem;
   font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  line-height: 1.3;
 }
 
-/* Mobile Responsive */
+.card-description {
+  color: #6c757d;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Special styling for Publish card */
+.feature-card:nth-child(3) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.feature-card:nth-child(3) .card-title,
+.feature-card:nth-child(3) .card-description {
+  color: white;
+}
+
+.feature-card:nth-child(3):hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 50px rgba(102, 126, 234, 0.4);
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
   .main-content {
-    flex-direction: column;
+    margin-left: 0;
+    padding: 1rem;
   }
   
-  .content-area {
-    max-width: 100%;
-    padding: 16px;
-    padding-bottom: 80px; /* Space for mobile tabs */
+  .top-left-branding {
+    top: 0.5rem;
+    left: 0.5rem;
   }
   
-  .welcome-section {
-    padding: 40px 24px;
-    margin-bottom: 32px;
+  .brand-logo {
+    font-size: 1.5rem;
   }
   
-  .welcome-header h1 {
-    font-size: 24px;
+  .brand-name {
+    font-size: 1.5rem;
   }
   
-  .welcome-header h2 {
-    font-size: 16px;
+  .dashboard-container {
+    padding-top: 3rem;
   }
   
-  .envelope-icon {
-    font-size: 48px;
+  .hero-title {
+    font-size: 2.5rem;
   }
   
-  .mobile-tabs {
-    display: flex;
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .feature-cards {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .feature-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .hero-section {
+    padding: 2rem 0;
+    margin-bottom: 2rem;
   }
 }
+
+@media (max-width: 480px) {
+  .brand-logo {
+    font-size: 1.2rem;
+  }
+  
+  .brand-name {
+    font-size: 1.2rem;
+  }
+  
+  .dashboard-container {
+    padding-top: 2.5rem;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  
+  .feature-card {
+    padding: 1.5rem 1rem;
+  }
+  
+  .card-title {
+    font-size: 1.3rem;
+  }
+  
+  .card-description { font-size:0.9rem; }
+  }
