@@ -8,6 +8,9 @@ import MainContent from './components/MainContent';
 import PublishPage from './components/PublishPage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
+import ExplorePage from './pages/ExplorePage';
+import CommentSection from './pages/CommentSection';
+import PaperDetailsPage from './pages/PaperDetailsPage';
 import './App.css';
 
 // Dashboard component that requires authentication
@@ -49,7 +52,11 @@ const AppContent: React.FC = () => {
         {/* Protected routes */}
         <Route 
           path="/dashboard" 
-          element={<Dashboard />}
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
         />
         
         <Route 
@@ -62,8 +69,39 @@ const AppContent: React.FC = () => {
         />
         
         <Route 
+          path="/explore" 
+          element={
+            <ProtectedRoute>
+              <ExplorePage />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/papers/:paperId/comments" 
+          element={
+            <ProtectedRoute>
+              <CommentSection />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/papers/:id" 
+          element={
+            <ProtectedRoute>
+              <PaperDetailsPage />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
           path="/publish" 
-          element={<PublishPage />}
+          element={
+            <ProtectedRoute>
+              <PublishPage />
+            </ProtectedRoute>
+          }
         />
         
         {/* Default redirect */}

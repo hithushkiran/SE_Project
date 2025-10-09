@@ -140,6 +140,7 @@
   justify-content: center;
   padding: 20px;
   z-index: 100;
+  pointer-events: auto;
 }
 
 .modal {
@@ -150,6 +151,7 @@
   border: 1px solid rgba(226, 232, 240, 0.9);
   box-shadow: 0 30px 60px rgba(2, 6, 23, 0.25);
   overflow: hidden;
+  pointer-events: auto;
 }
 
 .modal-header {
@@ -171,9 +173,7 @@
 }
 
 .modal-form { padding: 18px; }
-.input-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
-.input-row label { font-size: 14px; color: #334155; font-weight: 600; }
-.input-row input { padding: 12px 14px; border: 1px solid #e2e8f0; border-radius: 10px; background: white; font-size: 15px; }
+/* Input styles moved to improved section below */
 
 .modal-primary {
   width: 100%;
@@ -227,6 +227,11 @@
   background: white;
   font-size: 15px;
   transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .input-row input:focus,
@@ -234,6 +239,21 @@
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Ensure password input is properly styled */
+.input-row input[type="password"] {
+  font-family: monospace;
+  letter-spacing: 0.1em;
+}
+
+/* Remove any potential pointer-events issues */
+.input-row input {
+  pointer-events: auto;
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
 }
 
 .modal-actions {

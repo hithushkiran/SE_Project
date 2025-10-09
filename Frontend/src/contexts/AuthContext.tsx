@@ -23,7 +23,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const userData = await authService.getProfile();
       setUser(userData);
     } catch (error) {
+      // If profile fetch fails (e.g., 401), user is not authenticated
       setUser(null);
+      // Clear any stale tokens/cookies
+      localStorage.removeItem('token');
     } finally {
       setLoading(false);
     }

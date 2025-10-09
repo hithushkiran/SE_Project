@@ -1,4 +1,4 @@
-.sidebar {
+﻿.sidebar {
   width: 240px;
   background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
   color: white;
@@ -53,6 +53,7 @@
   align-items: center;
   gap: 12px;
   font-size: 1rem;
+  text-decoration: none;
 }
 
 .sidebar-item:hover {
@@ -119,7 +120,6 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
   .sidebar {
     width: 100%;
