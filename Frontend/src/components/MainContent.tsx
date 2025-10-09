@@ -9,6 +9,10 @@ const MainContent: React.FC = () => {
     navigate('/publish');
   };
 
+  const handleExploreClick = () => {
+    navigate('/explore');
+  };
+
   return (
     <div className="main-content">
       <div className="top-left-branding">
@@ -28,36 +32,28 @@ const MainContent: React.FC = () => {
         </div>
         
         <div className="feature-cards">
-          <div className="feature-card">
+          <div className="feature-card" onClick={handleExploreClick}>
             <div className="card-icon">
               <div className="document-icon">📄</div>
             </div>
-            <h3 className="card-title">Explore papers</h3>
-            <p className="card-description">Discover trending research and academic papers</p>
+            <h3 className="card-title">Explore Papers</h3>
+            <p className="card-description">Search and discover research papers from various fields</p>
           </div>
           
           <div className="feature-card">
             <div className="card-icon">
-              <div className="summarize-icon">📝</div>
+              <span className="summarize-icon">📝</span>
             </div>
-            <h3 className="card-title">Summarize</h3>
-            <p className="card-description">Get AI-powered summaries of research papers</p>
+            <h3 className="card-title">Summarize Papers</h3>
+            <p className="card-description">Get AI-powered summaries of complex research papers</p>
           </div>
           
           <div className="feature-card" onClick={handlePublishClick}>
             <div className="card-icon">
-              <div className="rocket-icon">🚀</div>
+              <span className="rocket-icon">🚀</span>
             </div>
-            <h3 className="card-title">Publish</h3>
-            <p className="card-description">Share your research with the community</p>
-          </div>
-          
-          <div className="feature-card">
-            <div className="card-icon">
-              <div className="info-icon">ℹ️</div>
-            </div>
-            <h3 className="card-title">About Us</h3>
-            <p className="card-description">Learn more about ResearchHub and our mission</p>
+            <h3 className="card-title">Publish Research</h3>
+            <p className="card-description">Share your research with the academic community</p>
           </div>
         </div>
       </div>
