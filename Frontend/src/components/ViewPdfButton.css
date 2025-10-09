@@ -1,0 +1,46 @@
+.view-pdf-button {
+  background: #3182ce;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(49, 130, 206, 0.2);
+}
+
+.view-pdf-button:hover:not(.disabled) {
+  background: #2c5aa0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(49, 130, 206, 0.3);
+}
+
+.view-pdf-button:active:not(.disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(49, 130, 206, 0.2);
+}
+
+.view-pdf-button.disabled {
+  background: #a0aec0;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+.view-pdf-button.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+@media (max-width: 768px) {
+  .view-pdf-button {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}

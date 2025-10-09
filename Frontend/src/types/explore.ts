@@ -10,7 +10,7 @@ export interface PaperResponse {
   author: string;
   abstractSnippet: string;
   uploadedAt: string;
-  publicationYear: number;
+  publicationYear: number | null;
   filePath: string;
   categories: CategoryResponse[];
 }

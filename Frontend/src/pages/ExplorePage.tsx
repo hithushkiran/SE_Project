@@ -6,6 +6,7 @@ import PaperGrid from '../components/explore/PaperGrid';
 import { useExplore } from '../hooks/useExplore';
 import { CategoryResponse } from '../types/explore';
 import './ExplorePage.css';
+import { api } from '../services/api';
 
 interface ExploreFilters {
   query: string;
@@ -39,15 +40,14 @@ const ExplorePage: React.FC = () => {
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const response = await fetch('http://localhost:8081/api/categories', {
-          credentials: 'include'
-        });
-        const data = await response.json();
-        if (data.success) {
-          setCategories(data.data);
+        const res = await api.get('/categories');
+        if (res.data.success) {
+          setCategories(res.data.data);
+        } else {
+          console.error('Categories API returned error shape:', res.data);
         }
-      } catch (error) {
-        console.error('Failed to load categories:', error);
+      } catch (error: any) {
+        console.error('Failed to load categories:', error?.response?.data || error.message);
       }
     };
     loadCategories();

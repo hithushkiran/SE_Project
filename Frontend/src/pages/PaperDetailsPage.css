@@ -1,10 +1,9 @@
 .paper-details-page {
   min-height: 100vh;
   background: #f8f9fa;
-  padding: 2rem 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .paper-details-card {
@@ -77,29 +76,72 @@
 }
 
 .back-button {
-  background: none;
+  background: #e2e8f0;
+  color: #4a5568;
   border: none;
-  color: #4285f4;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 2rem;
   font-size: 1rem;
   font-weight: 500;
-  cursor: pointer;
-  margin-top: 1rem;
-  align-self: flex-start;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.paper-details-loading,
-.paper-details-error {
-  margin-top: 4rem;
-  font-size: 1.2rem;
-  color: #888;
+.back-button:hover {
+  background: #cbd5e0;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.paper-details-loading {
   text-align: center;
+  padding: 4rem 2rem;
+  color: #4a5568;
+  font-size: 1.1rem;
 }
 
-@media (max-width: 600px) {
+.paper-details-error {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #e53e3e;
+}
+
+.paper-details-error h2 {
+  color: #c53030;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.paper-details-error p {
+  color: #4a5568;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .paper-details-page {
+    padding: 1rem;
+  }
+  
+  .back-button {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.9rem;
+  }
+  
+  .paper-details-loading,
+  .paper-details-error {
+    padding: 2rem 1rem;
+  }
+  
   .paper-details-card {
     padding: 1.25rem 0.5rem;
     max-width: 98vw;
   }
+  
   .paper-title {
     font-size: 1.3rem;
   }
