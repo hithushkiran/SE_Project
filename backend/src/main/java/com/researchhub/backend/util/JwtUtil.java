@@ -2,6 +2,7 @@ package com.researchhub.backend.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
@@ -13,8 +14,16 @@ import java.util.UUID;
 @Component
 public class JwtUtil {
 
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Secure 256-bit key
+    private final Key key;
     private final long EXPIRATION = 86400000; // 1 day in milliseconds
+
+    public JwtUtil(@Value("${jwt.secret:default_dev_secret_change_me}") String secret) {
+        // If the configured secret length is insufficient for HS256, pad it.
+        if (secret.length() < 32) {
+            secret = String.format("%-32s", secret).replace(' ', 'x');
+        }
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
     // Generate JWT token from user ID
     public String generateToken(UUID userId) {
