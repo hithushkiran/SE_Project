@@ -27,8 +27,8 @@ public class PaperResponseService {
                 paper.getUploadedAt(),
                 paper.getPublicationYear(),
                 filePath,
+                paper.getViewCount(),
                 paper.getCategories()
-                  // Add comment count
         );
     }
 

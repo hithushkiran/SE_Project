@@ -9,6 +9,7 @@ import PublishPage from './components/PublishPage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import ExplorePage from './pages/ExplorePage';
+import LibraryPage from './pages/LibraryPage';
 import CommentSection from './pages/CommentSection';
 import PaperDetailsPage from './pages/PaperDetailsPage';
 import './App.css';
@@ -73,6 +74,15 @@ const AppContent: React.FC = () => {
           element={
             <ProtectedRoute>
               <ExplorePage />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/library" 
+          element={
+            <ProtectedRoute>
+              <LibraryPage />
             </ProtectedRoute>
           } 
         />

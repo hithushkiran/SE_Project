@@ -24,7 +24,7 @@ public class LibraryService {
 
     @Transactional
     public void addToLibrary(UUID userId, UUID paperId) {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByIdWithLibrary(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new ResourceNotFoundException("Paper not found"));
@@ -35,7 +35,7 @@ public class LibraryService {
 
     @Transactional
     public void removeFromLibrary(UUID userId, UUID paperId) {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByIdWithLibrary(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new ResourceNotFoundException("Paper not found"));
@@ -46,7 +46,7 @@ public class LibraryService {
 
     @Transactional(readOnly = true)
     public List<Paper> getUserLibrary(UUID userId) {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByIdWithLibrary(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return user.getLibrary().stream().collect(Collectors.toList());
     }

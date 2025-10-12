@@ -25,11 +25,12 @@ public class PaperResponse {
     private LocalDateTime uploadedAt;
     private Integer publicationYear;
     private String filePath;
+    private Long viewCount;
     private Set<Category> categories;
 
     public PaperResponse(UUID id, String title, String author, String abstractText,
                          LocalDateTime uploadedAt, Integer publicationYear,
-                         String filePath, Set<Category> categories) {
+                         String filePath, Long viewCount, Set<Category> categories) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -39,6 +40,7 @@ public class PaperResponse {
         this.uploadedAt = uploadedAt;
         this.publicationYear = publicationYear;
         this.filePath = filePath;
+        this.viewCount = viewCount;
         this.categories = categories;
     }
 }

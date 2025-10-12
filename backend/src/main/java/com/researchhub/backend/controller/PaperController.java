@@ -224,6 +224,22 @@ public class PaperController {
     }
 
     /**
+     * NEW: Increment view count for a paper
+     */
+    @PostMapping("/{paperId}/view")
+    public ResponseEntity<ApiResponse<PaperResponse>> incrementViewCount(@PathVariable("paperId") UUID paperId) {
+        try {
+            Paper paper = paperService.incrementViewCount(paperId);
+            PaperResponse response = paperResponseService.toPaperResponse(paper);
+            return ResponseEntity.ok(ApiResponse.success("View count incremented", response));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Paper not found: " + e.getMessage()));
+        }
+    }
+
+    /**
      * Helper method to get user ID from authentication
      */
     private UUID getUserIdFromAuthentication(Authentication authentication) {

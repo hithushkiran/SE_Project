@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS papers (
     abstract_text TEXT,
     publication_year INT,
     uploaded_at DATETIME NOT NULL,
-    file_path VARCHAR(500) NOT NULL
+    file_path VARCHAR(500) NOT NULL,
+    view_count BIGINT NOT NULL DEFAULT 0
 );
 
 -- Paper-Categories junction table (if not exists)

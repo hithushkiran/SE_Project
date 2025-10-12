@@ -215,5 +215,17 @@ public class PaperService {
         // This would typically check if the user is the uploader or has admin role
         return true;
     }
+
+    /**
+     * NEW: Increment view count for a paper
+     */
+    @Transactional
+    public Paper incrementViewCount(UUID paperId) {
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new ResourceNotFoundException("Paper not found with id: " + paperId));
+        
+        paper.setViewCount(paper.getViewCount() + 1);
+        return paperRepository.save(paper);
+    }
 }
 

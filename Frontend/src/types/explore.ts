@@ -12,6 +12,7 @@ export interface PaperResponse {
   uploadedAt: string;
   publicationYear: number | null;
   filePath: string;
+  viewCount: number;
   categories: CategoryResponse[];
 }
 

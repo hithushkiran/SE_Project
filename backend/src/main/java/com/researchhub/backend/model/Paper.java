@@ -42,6 +42,9 @@ public class Paper {
     @Column(name = "abstract_text", columnDefinition = "TEXT")
     private String abstractText;
 
+    @Column(name = "view_count", nullable = false)
+    private Long viewCount = 0L;
+
     // Users that saved this paper in their libraries
     @ManyToMany(mappedBy = "library")
     @JsonIgnore

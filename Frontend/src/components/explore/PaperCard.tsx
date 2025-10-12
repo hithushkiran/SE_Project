@@ -2,17 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { PaperResponse } from '../../types/explore';
 import { commentService } from '../../services/commentService';
+import { libraryService } from '../../services/libraryService';
+import { api } from '../../api/axios';
 import './PaperCard.css';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface PaperCardProps {
   paper: PaperResponse;
   onClick?: (paper: PaperResponse) => void;
+  initialSaved?: boolean; // optional initial library saved state
+  onRemovedFromLibrary?: (paperId: string) => void; // notify caller when removed
+  onViewCountUpdate?: (paperId: string, newViewCount: number) => void; // notify caller when view count updates
 }
 
-const PaperCard: React.FC<PaperCardProps> = ({ paper, onClick }) => {
+const PaperCard: React.FC<PaperCardProps> = ({ paper, onClick, initialSaved = false, onRemovedFromLibrary, onViewCountUpdate }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [commentCount, setCommentCount] = useState<number>(0);
   const [loadingCount, setLoadingCount] = useState(true);
+  const [isSaved, setIsSaved] = useState(initialSaved);
+  const [viewCount, setViewCount] = useState<number>(paper.viewCount);
 
   // Load comment count when component mounts
   useEffect(() => {
@@ -41,7 +50,25 @@ const PaperCard: React.FC<PaperCardProps> = ({ paper, onClick }) => {
     });
   };
 
-  const handleClick = () => {
+  const incrementViewCount = async () => {
+    try {
+      const response = await api.post(`/api/papers/${paper.id}/view`);
+      if (response.data.success) {
+        const newViewCount = response.data.data.viewCount;
+        setViewCount(newViewCount);
+        if (onViewCountUpdate) {
+          onViewCountUpdate(paper.id, newViewCount);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to increment view count:', error);
+    }
+  };
+
+  const handleClick = async () => {
+    // Increment view count first
+    await incrementViewCount();
+    
     if (onClick) {
       onClick(paper);
     } else {
@@ -59,6 +86,27 @@ const PaperCard: React.FC<PaperCardProps> = ({ paper, onClick }) => {
   const handleCommentClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     navigate(`/papers/${paper.id}/comments`);
+  };
+
+  const handleToggleLibrary = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const nextState = !isSaved;
+    setIsSaved(nextState);
+    try {
+      if (!user?.id) throw new Error('User not authenticated');
+      if (nextState) {
+        await libraryService.addToLibrary(paper.id, user.id);
+      } else {
+        await libraryService.removeFromLibrary(paper.id, user.id);
+        if (onRemovedFromLibrary) {
+          onRemovedFromLibrary(paper.id);
+        }
+      }
+    } catch (error) {
+      // Revert on error
+      setIsSaved(!nextState);
+      console.error('Library toggle failed:', error);
+    }
   };
 
   return (
@@ -86,6 +134,13 @@ const PaperCard: React.FC<PaperCardProps> = ({ paper, onClick }) => {
             {!loadingCount && (
               <span className="comment-count">{commentCount}</span>
             )}
+          </button>
+          <button
+            className={`bookmark-button${isSaved ? ' saved' : ''}`}
+            onClick={handleToggleLibrary}
+            title={isSaved ? 'Saved' : 'Add to Library'}
+          >
+            {isSaved ? '📘' : '📑'}
           </button>
           <button 
             className="download-button"
@@ -142,6 +197,10 @@ const PaperCard: React.FC<PaperCardProps> = ({ paper, onClick }) => {
           <div className="paper-status">
             Available
           </div>
+        </div>
+
+        <div className="paper-view-count">
+          👁️ {viewCount} views
         </div>
       </div>
     </div>

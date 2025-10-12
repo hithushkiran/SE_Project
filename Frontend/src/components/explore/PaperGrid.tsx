@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PaperCard from './PaperCard';
 import { PaperResponse } from '../../types/explore';
 import './PaperGrid.css';
@@ -20,6 +20,22 @@ const PaperGrid: React.FC<PaperGridProps> = ({
   onLoadMore,
   isSearching
 }) => {
+  const [papersWithViewCounts, setPapersWithViewCounts] = useState<PaperResponse[]>(papers);
+
+  // Update local papers when props change
+  React.useEffect(() => {
+    setPapersWithViewCounts(papers);
+  }, [papers]);
+
+  const handleViewCountUpdate = (paperId: string, newViewCount: number) => {
+    setPapersWithViewCounts(prevPapers => 
+      prevPapers.map(paper => 
+        paper.id === paperId 
+          ? { ...paper, viewCount: newViewCount }
+          : paper
+      )
+    );
+  };
   if (error) {
     return (
       <div className="paper-grid-error">
@@ -46,7 +62,7 @@ const PaperGrid: React.FC<PaperGridProps> = ({
     );
   }
 
-  if (papers.length === 0 && !loading) {
+  if (papersWithViewCounts.length === 0 && !loading) {
     return (
       <div className="paper-grid-empty">
         <div className="empty-content">
@@ -74,17 +90,21 @@ const PaperGrid: React.FC<PaperGridProps> = ({
           {isSearching ? 'Search Results' : 'Recommended for You'}
         </h2>
         <span className="paper-count">
-          {papers.length} paper{papers.length !== 1 ? 's' : ''}
+          {papersWithViewCounts.length} paper{papersWithViewCounts.length !== 1 ? 's' : ''}
         </span>
       </div>
 
       <div className="papers-container">
-        {papers.map(paper => (
-          <PaperCard key={paper.id} paper={paper} />
+        {papersWithViewCounts.map(paper => (
+          <PaperCard 
+            key={paper.id} 
+            paper={paper} 
+            onViewCountUpdate={handleViewCountUpdate}
+          />
         ))}
       </div>
 
-      {loading && papers.length > 0 && (
+      {loading && papersWithViewCounts.length > 0 && (
         <div className="loading-more">
           <div className="loading-spinner small"></div>
           <span>Loading more papers...</span>
