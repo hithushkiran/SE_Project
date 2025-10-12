@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import MainContent from './components/MainContent';
+import PublishPage from './components/PublishPage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import ExplorePage from './pages/ExplorePage';
@@ -37,8 +38,8 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="app">
-      {/* Only show header on authenticated routes */}
-      {isAuthenticated && <Header />}
+      {/* Show header on all routes for testing */}
+      <Header />
       
       <Routes>
         {/* Public routes */}
@@ -56,7 +57,7 @@ const AppContent: React.FC = () => {
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
-          } 
+          }
         />
         
         <Route 
@@ -96,12 +97,22 @@ const AppContent: React.FC = () => {
         />
         
         <Route 
+
           path="/my-publications" 
           element={
             <ProtectedRoute>
               <MyPublicationsPage />
             </ProtectedRoute>
-          } 
+          } />
+
+
+          <Route 
+          path="/publish" 
+          element={
+            <ProtectedRoute>
+              <PublishPage />
+            </ProtectedRoute>
+          }
         />
         
         {/* Default redirect */}

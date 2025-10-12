@@ -2,23 +2,26 @@ import React from 'react';
 import './ViewPdfButton.css';
 
 interface ViewPdfButtonProps {
-  filePath: string;
+  filePath: string; // May be absolute (e.g., C:\\path\\to\\uploads\\abc.pdf) or relative (uploads/abc.pdf)
 }
 
 const ViewPdfButton: React.FC<ViewPdfButtonProps> = ({ filePath }) => {
   const handleViewPdf = () => {
-    if (filePath) {
-      // Normalize the file path to ensure it starts with uploads/
-      const normalizedPath = filePath.startsWith('uploads/') ? filePath : `uploads/${filePath}`;
-      const pdfUrl = `http://localhost:8081/${normalizedPath}`;
-      window.open(pdfUrl, '_blank');
+    if (!filePath) return;
+
+    // Extract filename from possible absolute path. Handles both Windows and POSIX separators.
+    const raw = filePath.split(/[/\\\\]/).pop() || '';
+    if (!raw.toLowerCase().endsWith('.pdf')) {
+      // If stored file lacks extension (edge case), still attempt.
     }
+    const pdfUrl = `http://localhost:8080/uploads/${raw}`;
+    window.open(pdfUrl, '_blank');
   };
 
-  const isPdfAvailable = filePath && filePath.trim() !== '';
+  const isPdfAvailable = Boolean(filePath && filePath.trim() !== '');
 
   return (
-    <button 
+    <button
       className={`view-pdf-button ${!isPdfAvailable ? 'disabled' : ''}`}
       onClick={handleViewPdf}
       disabled={!isPdfAvailable}

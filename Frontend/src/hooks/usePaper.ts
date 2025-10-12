@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { PaperResponse } from '../types/explore';
-
-const API_BASE = 'http://localhost:8081';
+import { api } from '../services/api';
 
 interface UsePaperResult {
   paper: PaperResponse | null;
@@ -26,20 +25,19 @@ export const usePaper = (id: string | undefined): UsePaperResult => {
     setError(null);
     
     try {
-      const response = await fetch(`${API_BASE}/api/papers/${id}`, {
-        credentials: 'include',
-      });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        setPaper(data.data);
+      const res = await api.get(`/papers/${id}`);
+      if (res.data.success) {
+        setPaper(res.data.data);
       } else {
-        setError(data.message || 'Failed to load paper');
+        setError(res.data.message || 'Failed to load paper');
       }
-    } catch (err) {
-      setError('Failed to load paper');
-      console.error('Error fetching paper:', err);
+    } catch (err: any) {
+      if (err?.response?.status === 401) {
+        setError('Unauthorized – please log in again.');
+      } else {
+        setError(err?.response?.data?.message || 'Failed to load paper');
+      }
+      console.error('Error fetching paper:', err?.response?.data || err);
     } finally {
       setLoading(false);
     }
