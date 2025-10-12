@@ -42,6 +42,20 @@ public class Paper {
     @Column(name = "abstract_text", columnDefinition = "TEXT")
     private String abstractText;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private PaperStatus status = PaperStatus.PENDING;
+
+    @Column(name = "rejection_reason", columnDefinition = "TEXT")
+    private String rejectionReason;
+
+    @Column(name = "reviewed_at")
+    private LocalDateTime reviewedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewed_by")
+    private User reviewedBy;
+
     // Users that saved this paper in their libraries
     @ManyToMany(mappedBy = "library")
     @JsonIgnore

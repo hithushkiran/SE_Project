@@ -1,0 +1,195 @@
+.admin-signup-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.admin-signup-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  padding: 3rem;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-signup-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.admin-signup-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.admin-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.admin-icon {
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.admin-logo h1 {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin: 0;
+  font-weight: 700;
+}
+
+.admin-subtitle {
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.admin-signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.form-group input {
+  padding: 1rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: #f8f9fa;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #667eea;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-hint {
+  color: #6c757d;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.admin-signup-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+}
+
+.admin-signup-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.admin-signup-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #f5c6cb;
+  font-weight: 600;
+  text-align: center;
+}
+
+.admin-signup-footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.admin-signup-footer p {
+  color: #6c757d;
+  margin-bottom: 1rem;
+}
+
+.admin-login-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.admin-login-link:hover {
+  color: #764ba2;
+}
+
+.back-to-site {
+  color: #6c757d;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.back-to-site:hover {
+  color: #495057;
+}
+
+@media (max-width: 768px) {
+  .admin-signup-page {
+    padding: 1rem;
+  }
+  
+  .admin-signup-container {
+    padding: 2rem;
+  }
+  
+  .admin-logo {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .admin-logo h1 {
+    font-size: 1.5rem;
+  }
+  
+  .admin-subtitle {
+    font-size: 1rem;
+  }
+}

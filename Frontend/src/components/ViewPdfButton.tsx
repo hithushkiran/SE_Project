@@ -14,7 +14,9 @@ const ViewPdfButton: React.FC<ViewPdfButtonProps> = ({ filePath }) => {
     if (!raw.toLowerCase().endsWith('.pdf')) {
       // If stored file lacks extension (edge case), still attempt.
     }
-    const pdfUrl = `http://localhost:8080/uploads/${raw}`;
+  const rawBase = (import.meta as any).env?.VITE_API_BASE_URL;
+  const API_BASE_URL = rawBase ? rawBase.replace(/\/api\/?$/, '') : 'http://localhost:8082';
+  const pdfUrl = `${API_BASE_URL}/uploads/${raw}`;
     window.open(pdfUrl, '_blank');
   };
 

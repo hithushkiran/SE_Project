@@ -1,6 +1,9 @@
 package com.researchhub.backend.repository;
 
 import com.researchhub.backend.model.Comment;
+import com.researchhub.backend.model.CommentStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,4 +32,8 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
     
     // Check if comment exists and belongs to paper
     boolean existsByIdAndPaperId(UUID commentId, UUID paperId);
+    
+    // Admin methods for moderation
+    Page<Comment> findByStatus(CommentStatus status, Pageable pageable);
+    List<Comment> findByAuthorId(UUID authorId);
 }
