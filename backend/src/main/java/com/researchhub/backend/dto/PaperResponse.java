@@ -27,10 +27,18 @@ public class PaperResponse {
     private String filePath;
     private Long viewCount;
     private Set<Category> categories;
+    private String abstractText;
+    private String status;
+    private String rejectionReason;
+    private LocalDateTime reviewedAt;
+    private UUID uploadedById;
+    private String uploadedByName;
+    private boolean canEdit;
 
     public PaperResponse(UUID id, String title, String author, String abstractText,
                          LocalDateTime uploadedAt, Integer publicationYear,
-                         String filePath, Long viewCount, Set<Category> categories) {
+                         String filePath, Long viewCount, Set<Category> categories,
+                         UUID uploadedById, String uploadedByName, boolean canEdit) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -42,6 +50,9 @@ public class PaperResponse {
         this.filePath = filePath;
         this.viewCount = viewCount;
         this.categories = categories;
+        this.uploadedById = uploadedById;
+        this.uploadedByName = uploadedByName;
+        this.canEdit = canEdit;
     }
 }
 

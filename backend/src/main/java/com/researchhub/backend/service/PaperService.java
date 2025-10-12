@@ -3,10 +3,14 @@ package com.researchhub.backend.service;
 import com.researchhub.backend.exception.ResourceNotFoundException;
 import com.researchhub.backend.model.Category;
 import com.researchhub.backend.model.Paper;
+import com.researchhub.backend.model.User;
 import com.researchhub.backend.repository.CategoryRepository;
 import com.researchhub.backend.repository.PaperRepository;
+import com.researchhub.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.UUID;
 
 @Service
 public class PaperService {
@@ -32,17 +37,20 @@ public class PaperService {
     // ===== YOUR EXISTING METHODS =====
 
     @Transactional
-    public Paper uploadPaper(MultipartFile file, String title, String author) throws IOException {
+    public Paper uploadPaper(UUID uploadedByUserId, MultipartFile file, String title, String author) throws IOException {
         // Delegate to the full method with null year & abstract
-        return uploadPaper(file, title, author, null, null);
+        return uploadPaper(uploadedByUserId, file, title, author, null, null);
     }
+
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * Overloaded upload accepting publicationYear & abstractText.
      * If publicationYear is null or invalid (< 1900 or > current year +1), it will be set to current year.
      */
     @Transactional
-    public Paper uploadPaper(MultipartFile file, String title, String author, Integer publicationYear, String abstractText) throws IOException {
+    public Paper uploadPaper(UUID uploadedByUserId, MultipartFile file, String title, String author, Integer publicationYear, String abstractText) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File must not be empty");
         }
@@ -66,10 +74,15 @@ public class PaperService {
             }
         }
 
+        // Find the user who is uploading
+        User uploader = userRepository.findById(uploadedByUserId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
         // Persist paper metadata
         Paper paper = new Paper();
         paper.setTitle(title != null && !title.isBlank() ? title : (original != null ? original.replace(extension, "") : "Untitled"));
         paper.setAuthor(author);
+        paper.setUploadedBy(uploader);
         // Store relative path for static resource access
         paper.setFilePath(filename);
         paper.setPublicationYear(safeYear != null ? safeYear : currentYear); // auto year if missing
@@ -113,8 +126,8 @@ public class PaperService {
      * NEW: Upload paper with categories in one operation
      */
     @Transactional
-    public Paper uploadPaperWithCategories(MultipartFile file, String title, String author, List<UUID> categoryIds) throws IOException {
-        Paper paper = uploadPaper(file, title, author);
+    public Paper uploadPaperWithCategories(UUID uploadedByUserId, MultipartFile file, String title, String author, List<UUID> categoryIds) throws IOException {
+        Paper paper = uploadPaper(uploadedByUserId, file, title, author);
         if (categoryIds != null && !categoryIds.isEmpty()) {
             paper = assignCategoriesToPaper(paper.getId(), categoryIds);
         }
@@ -124,11 +137,11 @@ public class PaperService {
     /**
      * Overload supporting publicationYear & abstractText.
      */
-    public Paper uploadPaperWithCategories(MultipartFile file, String title, String author,
+    public Paper uploadPaperWithCategories(UUID uploadedByUserId, MultipartFile file, String title, String author,
                                            Integer publicationYear, String abstractText,
                                            List<UUID> categoryIds) throws IOException {
         // First upload with extended metadata
-        Paper paper = uploadPaper(file, title, author, publicationYear, abstractText);
+        Paper paper = uploadPaper(uploadedByUserId, file, title, author, publicationYear, abstractText);
 
         if (categoryIds != null && !categoryIds.isEmpty()) {
             paper = assignCategoriesToPaper(paper.getId(), categoryIds);
@@ -211,9 +224,18 @@ public class PaperService {
      * NEW: Check if user can edit paper (for authorization)
      */
     public boolean canUserEditPaper(UUID paperId, UUID userId) {
-        // For now, return true - you can implement proper authorization later
-        // This would typically check if the user is the uploader or has admin role
-        return true;
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new ResourceNotFoundException("Paper not found"));
+        
+        // User can edit if they are the uploader
+        return userId.equals(paper.getUploadedBy().getId());
+    }
+
+    /**
+     * NEW: Get user's uploaded papers
+     */
+    public Page<Paper> getUserPapers(UUID userId, Pageable pageable) {
+        return paperRepository.findByUploadedBy_IdOrderByUploadedAtDesc(userId, pageable);
     }
 
     /**

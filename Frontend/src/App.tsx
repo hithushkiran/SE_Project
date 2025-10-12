@@ -12,6 +12,10 @@ import ExplorePage from './pages/ExplorePage';
 import LibraryPage from './pages/LibraryPage';
 import CommentSection from './pages/CommentSection';
 import PaperDetailsPage from './pages/PaperDetailsPage';
+import MyPublicationsPage from './pages/MyPublicationsPage';
+import NotificationsPage from './pages/NotificationsPage';
+import AdminLoginPage from './pages/AdminLoginPage';
+import AdminPanel from './components/admin/AdminPanel';
 import './App.css';
 
 // Dashboard component that requires authentication
@@ -47,6 +51,20 @@ const AppContent: React.FC = () => {
           path="/login" 
           element={
             !isAuthenticated ? <LoginPage /> : <Navigate to="/dashboard" replace />
+          } 
+        />
+        
+        <Route 
+          path="/admin/signup" 
+          element={
+            <Navigate to="/admin/login" replace />
+          } 
+        />
+        
+        <Route 
+          path="/admin/login" 
+          element={
+            !isAuthenticated ? <AdminLoginPage /> : <Navigate to="/admin" replace />
           } 
         />
         
@@ -106,10 +124,38 @@ const AppContent: React.FC = () => {
         />
         
         <Route 
+
+          path="/my-publications" 
+          element={
+            <ProtectedRoute>
+              <MyPublicationsPage />
+            </ProtectedRoute>
+          } />
+
+
+          <Route 
           path="/publish" 
           element={
             <ProtectedRoute>
               <PublishPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route 
+          path="/notifications" 
+          element={
+            <ProtectedRoute>
+              <NotificationsPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route 
+          path="/admin" 
+          element={
+            <ProtectedRoute>
+              <AdminPanel />
             </ProtectedRoute>
           }
         />

@@ -30,6 +30,10 @@ public class Paper {
     @Column
     private String author;
 
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "uploaded_by", columnDefinition = "BINARY(16)")
+    private User uploadedBy;
+
     @Column(name = "file_path", nullable = false)
     private String filePath;
 
@@ -41,6 +45,20 @@ public class Paper {
 
     @Column(name = "abstract_text", columnDefinition = "TEXT")
     private String abstractText;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private PaperStatus status = PaperStatus.PENDING;
+
+    @Column(name = "rejection_reason", columnDefinition = "TEXT")
+    private String rejectionReason;
+
+    @Column(name = "reviewed_at")
+    private LocalDateTime reviewedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewed_by")
+    private User reviewedBy;
 
     @Column(name = "view_count", nullable = false)
     private Long viewCount = 0L;
