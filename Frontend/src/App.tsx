@@ -10,6 +10,7 @@ import ProfilePage from './pages/ProfilePage';
 import ExplorePage from './pages/ExplorePage';
 import CommentSection from './pages/CommentSection';
 import PaperDetailsPage from './pages/PaperDetailsPage';
+import MyPublicationsPage from './pages/MyPublicationsPage';
 import './App.css';
 
 // Dashboard component that requires authentication
@@ -90,6 +91,15 @@ const AppContent: React.FC = () => {
           element={
             <ProtectedRoute>
               <PaperDetailsPage />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/my-publications" 
+          element={
+            <ProtectedRoute>
+              <MyPublicationsPage />
             </ProtectedRoute>
           } 
         />
