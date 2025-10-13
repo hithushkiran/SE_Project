@@ -49,4 +49,7 @@ public interface PaperRepository extends JpaRepository<Paper, UUID> {
 
     // Changed method: now author is a String
     List<Paper> findByAuthor(String authorId);
+
+    // Find papers by uploader
+    Page<Paper> findByUploadedBy_IdOrderByUploadedAtDesc(UUID userId, Pageable pageable);
 }

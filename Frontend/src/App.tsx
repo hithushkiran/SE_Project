@@ -14,6 +14,7 @@ import PaperDetailsPage from './pages/PaperDetailsPage';
 import NotificationsPage from './pages/NotificationsPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminPanel from './components/admin/AdminPanel';
+import MyPublicationsPage from './pages/MyPublicationsPage';
 import './App.css';
 
 // Dashboard component that requires authentication
@@ -137,6 +138,15 @@ const AppContent: React.FC = () => {
               <AdminPanel />
             </ProtectedRoute>
           }
+        />
+        
+        <Route 
+          path="/my-publications" 
+          element={
+            <ProtectedRoute>
+              <MyPublicationsPage />
+            </ProtectedRoute>
+          } 
         />
         
         {/* Default redirect */}

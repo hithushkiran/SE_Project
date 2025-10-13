@@ -60,7 +60,7 @@ public class ExploreController {
                 papers = paperSearchService.getAllPapers(pageable);
             }
 
-            Page<PaperResponse> response = paperResponseService.toPaperResponse(papers);
+            Page<PaperResponse> response = paperResponseService.toPaperResponse(papers, userId);
             return ResponseEntity.ok(ApiResponse.success(response));
 
         } catch (Exception e) {
