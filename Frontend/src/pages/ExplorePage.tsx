@@ -40,7 +40,7 @@ const ExplorePage: React.FC = () => {
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const res = await api.get('/categories');
+        const res = await api.get('categories');
         if (res.data.success) {
           setCategories(res.data.data);
         } else {

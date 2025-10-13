@@ -41,6 +41,10 @@ public interface PaperRepository extends JpaRepository<Paper, UUID> {
 
     // Find papers by author
     List<Paper> findByAuthorContainingIgnoreCase(String author);
+
+    // Find paper by ID with categories eagerly loaded
+    @Query("SELECT p FROM Paper p LEFT JOIN FETCH p.categories WHERE p.id = :id")
+    java.util.Optional<Paper> findByIdWithCategories(@Param("id") UUID id);
 }
 
 

@@ -25,7 +25,7 @@ export const usePaper = (id: string | undefined): UsePaperResult => {
     setError(null);
     
     try {
-      const res = await api.get(`/papers/${id}`);
+      const res = await api.get(`papers/${id}`);
       if (res.data.success) {
         setPaper(res.data.data);
       } else {

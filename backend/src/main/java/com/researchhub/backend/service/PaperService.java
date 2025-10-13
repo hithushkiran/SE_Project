@@ -100,9 +100,18 @@ public class PaperService {
 
     // ===== NEW METHODS NEEDED FOR CONTROLLER =====
 
+    @Transactional(readOnly = true)
     public Paper getPaperById(UUID id) {
-        return paperRepository.findById(id)
+        System.out.println("=== getPaperById ===");
+        System.out.println("Fetching paper with ID: " + id);
+        Paper paper = paperRepository.findByIdWithCategories(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Paper not found with id: " + id));
+        System.out.println("Paper found: " + paper.getTitle());
+        System.out.println("Paper has " + (paper.getCategories() != null ? paper.getCategories().size() : "null") + " categories");
+        if (paper.getCategories() != null && !paper.getCategories().isEmpty()) {
+            paper.getCategories().forEach(cat -> System.out.println("  - Category: " + cat.getName()));
+        }
+        return paper;
     }
 
     public List<Paper> getAllPapers() {
@@ -124,14 +133,23 @@ public class PaperService {
     /**
      * Overload supporting publicationYear & abstractText.
      */
+    @Transactional
     public Paper uploadPaperWithCategories(MultipartFile file, String title, String author,
                                            Integer publicationYear, String abstractText,
                                            List<UUID> categoryIds) throws IOException {
+        System.out.println("=== uploadPaperWithCategories ===");
+        System.out.println("Category IDs received: " + categoryIds);
+        
         // First upload with extended metadata
         Paper paper = uploadPaper(file, title, author, publicationYear, abstractText);
+        System.out.println("Paper uploaded with ID: " + paper.getId());
 
         if (categoryIds != null && !categoryIds.isEmpty()) {
+            System.out.println("Assigning " + categoryIds.size() + " categories to paper");
             paper = assignCategoriesToPaper(paper.getId(), categoryIds);
+            System.out.println("Categories assigned. Paper now has " + paper.getCategories().size() + " categories");
+        } else {
+            System.out.println("No categories to assign (categoryIds is null or empty)");
         }
 
         return paper;

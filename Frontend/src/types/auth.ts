@@ -16,6 +16,13 @@ export interface UpdateProfileRequest {
   bio?: string;
   website?: string;
   avatarUrl?: string;
+  categoryIds?: string[];
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  description?: string;
 }
 
 export interface UserResponse {
@@ -28,4 +35,5 @@ export interface UserResponse {
   avatarUrl?: string;
   emailVerified: boolean;
   role: string;
+  interests?: Category[];
 }

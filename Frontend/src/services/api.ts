@@ -16,7 +16,7 @@ api.interceptors.response.use(
   (error) => {
     // Only redirect on 401 if it's not the profile check endpoint
     // This prevents infinite redirect loops during initial auth check
-    if (error.response?.status === 401 && !error.config.url?.includes('/auth/profile')) {
+    if (error.response?.status === 401 && !error.config.url?.includes('auth/profile')) {
       // Auto-redirect to login on 401 for other protected endpoints
       window.location.href = '/login';
     }
