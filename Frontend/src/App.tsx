@@ -40,8 +40,8 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="app">
-      {/* Show header on all routes for testing */}
-      <Header />
+      {/* Show header only when authenticated to avoid duplicate nav on login pages */}
+      {isAuthenticated && <Header />}
       
       <Routes>
         {/* Public routes */}
