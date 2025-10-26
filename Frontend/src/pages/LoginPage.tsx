@@ -5,8 +5,7 @@ import './LoginPage.css';
 
 const Logo = () => (
   <div className="brand">
-    <div className="brand-icon">🧪</div>
-    <span className="brand-text">ResearchHub</span>
+    <span className="brand-text">𝘴𝘺𝘯𝘵𝘩𝘦𝘴𝘪𝘴</span>
   </div>
 );
 
