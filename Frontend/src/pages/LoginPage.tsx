@@ -10,14 +10,16 @@ const Logo = () => (
 );
 
 const Card = ({ title, position, icon, description }: { title: string; position: string; icon: string; description: string }) => (
-  <div className={`card card-${position}`}>
+  <div className={`card card-${position} card-${title.toLowerCase()}`}>
     <div className="card-tab">
       <span className="tab-icon">{icon}</span>
       <span className="tab-text">{title}</span>
     </div>
     <div className="card-body">
       <div className="card-content">
-        <p className="card-description">{description}</p>
+        {title !== 'Publish' && (
+          <p className="card-description">{description}</p>
+        )}
         <div className="card-visual">
           {title === 'Discover' && (
             <div className="search-visual">
@@ -48,7 +50,7 @@ const Card = ({ title, position, icon, description }: { title: string; position:
                   loading="lazy"
                 />
                 <img
-                  src="https://i.ytimg.com/vi/MEQlqWAPD9A/maxresdefault.jpg"
+                  src="https://miro.medium.com/v2/resize:fit:1400/1*m_GKsrB2EfnLwwug3ASrtw.jpeg"
                   alt="Researchers collaborating on data"
                   className="publish-image"
                   loading="lazy"
