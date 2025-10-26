@@ -15,6 +15,7 @@ import NotificationsPage from './pages/NotificationsPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminPanel from './components/admin/AdminPanel';
 import './App.css';
+import PDFSummarizer from './components/PDFSummarizer';
 
 // Dashboard component that requires authentication
 const Dashboard: React.FC = () => {
@@ -81,6 +82,15 @@ const AppContent: React.FC = () => {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path="/summary" 
+          element={
+            <ProtectedRoute>
+              <PDFSummarizer />
             </ProtectedRoute>
           } 
         />

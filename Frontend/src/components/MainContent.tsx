@@ -12,6 +12,10 @@ const MainContent: React.FC = () => {
   const handleExploreClick = () => {
     navigate('/explore');
   };
+  
+  const handleSummariesClick = () => {
+    navigate('/summary');
+  };
 
 
   return (
@@ -82,7 +86,9 @@ const MainContent: React.FC = () => {
                   </svg>
                 </div>
               </div>
-              <h3 className="card-title">AI Summaries</h3>
+              <h3 className="card-title" onClick={handleSummariesClick} style={{ cursor: 'pointer' }}>
+                AI Summaries
+              </h3>
               <p className="card-description">Get intelligent summaries and key insights from complex research papers</p>
               <div className="card-arrow">→</div>
             </div>
