@@ -34,10 +34,25 @@ const Card = ({ title, position, icon, description }: { title: string; position:
           )}
           {title === 'Publish' && (
             <div className="publish-visual">
-              <div className="paper-stack">
-                <div className="paper"></div>
-                <div className="paper"></div>
-                <div className="paper"></div>
+              <div className="publish-gallery">
+                <img
+                  src="https://www.sciencedocs.com/wp-content/uploads/2017/01/close-up-sci-papers-500x374.gif"
+                  alt="Animated close-up of scientific notes"
+                  className="publish-image"
+                  loading="lazy"
+                />
+                <img
+                  src="https://media.istockphoto.com/id/474852858/photo/newspaper-with-the-headline-research-and-development.jpg?s=612x612&w=0&k=20&c=-lrvZQyw6bGiw_vkiOfg--viTcwYQS5BeRAx37B-e-4="
+                  alt="Research and development headline"
+                  className="publish-image"
+                  loading="lazy"
+                />
+                <img
+                  src="https://i.ytimg.com/vi/MEQlqWAPD9A/maxresdefault.jpg"
+                  alt="Researchers collaborating on data"
+                  className="publish-image"
+                  loading="lazy"
+                />
               </div>
             </div>
           )}
