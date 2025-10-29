@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3b705ea8-7aa1-451e-b602-287feb74fe19" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/components/explore/PaperCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/explore/PaperCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/components/explore/PaperGrid.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/explore/PaperGrid.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/hooks/useExplore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/hooks/useExplore.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/hooks/usePaper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/hooks/usePaper.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/ExplorePage.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/ExplorePage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/ExplorePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/ExplorePage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/PaperDetailsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/PaperDetailsPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/controller/ExploreController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/controller/ExploreController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/controller/PaperController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/controller/PaperController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/repository/PaperRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/repository/PaperRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/service/PaperSearchService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/service/PaperSearchService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/service/PaperService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/service/PaperService.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Sugeerthan&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/hithushkiran/SE_Project.git&quot;,
+    &quot;accountId&quot;: &quot;bab237fb-f6d5-4659-b5f0-ef61c70ad1fb&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="33scYlF2zAeZXkpe4xc7TlfzxMG" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.BackendApplication.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "Sugeerthan",
+    "last_opened_file_path": "C:/Users/ASUS/OneDrive/Desktop/SE Project/SE_Project"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="BackendApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.researchhub.backend.BackendApplication" />
+      <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.researchhub.backend.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.BackendApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3b705ea8-7aa1-451e-b602-287feb74fe19" name="Changes" comment="" />
+      <created>1760109269581</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1760109269581</updated>
+    </task>
+    <servers />
+  </component>
+</project>

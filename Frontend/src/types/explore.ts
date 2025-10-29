@@ -14,6 +14,9 @@ export interface PaperResponse {
   filePath: string;
   viewCount: number;
   categories: CategoryResponse[];
+  uploadedById: string;
+  uploadedByName: string;
+  canEdit: boolean;
 }
 
 export interface ExploreFilters {
@@ -31,11 +34,13 @@ export interface ApiResponse<T> {
 
 export interface PaginatedResponse<T> {
   content: T[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+  };
   totalElements: number;
   totalPages: number;
-  size: number;
-  number: number;
-  first: boolean;
   last: boolean;
+  first: boolean;
   numberOfElements: number;
 }

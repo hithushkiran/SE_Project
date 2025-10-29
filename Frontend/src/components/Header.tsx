@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import NotificationBell from './NotificationBell';
 import './Header.css';
 
 const Header: React.FC = () => {
@@ -20,6 +21,10 @@ const Header: React.FC = () => {
     navigate('/profile');
   };
 
+  const handleAdminClick = () => {
+    navigate('/admin');
+  };
+
   // Get user initial for avatar
   const getUserInitial = () => {
     if (user?.fullName) {
@@ -37,21 +42,10 @@ const Header: React.FC = () => {
         </div>
       </div>
       
-      <div className="header-center">
-        <div className="explore-section">
-          <h2>Explore</h2>
-          <p>Discover trending research, earning, and funding opportunities</p>
-        </div>
-      </div>
-      
       <div className="header-right">
-        <div className="search-container">
-          <input type="text" placeholder="Search ResearchHub..." className="search-input" />
-          <span className="search-shortcut">Ctrl+K</span>
-        </div>
         
         <div className="user-actions">
-          <button className="notification-btn">🔔</button>
+          <NotificationBell />
           
           {/* User dropdown or menu */}
           <div className="user-menu">
@@ -71,6 +65,11 @@ const Header: React.FC = () => {
               <button className="dropdown-item" onClick={handleProfileClick}>
                 👤 Profile
               </button>
+              {user?.role === 'ADMIN' && (
+                <button className="dropdown-item admin-item" onClick={handleAdminClick}>
+                  ⚙️ Admin Panel
+                </button>
+              )}
               <button className="dropdown-item" onClick={handleLogout}>
                 🚪 Logout
               </button>
