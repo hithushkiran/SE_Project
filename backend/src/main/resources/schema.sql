@@ -35,4 +35,13 @@ CREATE TABLE IF NOT EXISTS paper_categories (
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS library_items (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BINARY(16) NOT NULL,
+    paper_id BINARY(16) NOT NULL,
+    created_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    CONSTRAINT fk_library_items_paper FOREIGN KEY (paper_id) REFERENCES papers(id) ON DELETE CASCADE,
+    CONSTRAINT uq_library_items_user_paper UNIQUE (user_id, paper_id)
+);
+
 SET FOREIGN_KEY_CHECKS = 1;

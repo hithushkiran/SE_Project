@@ -64,4 +64,9 @@ public class PaperSearchService {
         logger.info("Getting all papers for public access");
         return paperRepository.findByOrderByUploadedAtDesc(pageable);
     }
+
+    public Page<Paper> getTrendingPapers(Pageable pageable) {
+        logger.info("Getting trending papers sorted by view count");
+        return paperRepository.findAllByOrderByViewCountDesc(pageable);
+    }
 }

@@ -58,6 +58,35 @@
   align-items: center;
 }
 
+.explore-tabs {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.explore-tab {
+  background: white;
+  border: 2px solid #e0e0e0;
+  color: #666;
+  padding: 0.65rem 1.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.explore-tab:hover {
+  border-color: #4285f4;
+  color: #4285f4;
+}
+
+.explore-tab.active {
+  background: #4285f4;
+  border-color: #4285f4;
+  color: white;
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.2);
+}
+
 .filter-toggle {
   background: white;
   border: 2px solid #e0e0e0;
@@ -114,6 +143,15 @@
   .search-section {
     flex-direction: column;
     gap: 0.75rem;
+  }
+
+  .explore-tabs {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .explore-tab {
+    flex: 1;
   }
   
   .filter-toggle {

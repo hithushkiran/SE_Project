@@ -120,7 +120,7 @@ public class PaperController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<PaperResponse>> getPaperById(@PathVariable("id") UUID id) {
         try {
-            Paper paper = paperService.getPaperById(id);
+            Paper paper = paperService.getPaperByIdWithViewIncrement(id);
             PaperResponse response = paperResponseService.toPaperResponse(paper);
             return ResponseEntity.ok(ApiResponse.success(response));
 

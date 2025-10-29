@@ -1,6 +1,8 @@
 import { useState, useCallback, useRef } from 'react';
-import { PaperResponse, ExploreFilters, PaginatedResponse } from '../types/explore';
+import { PaperResponse, ExploreFilters } from '../types/explore';
 import { api } from '../services/api';
+
+type ExploreMode = 'recommended' | 'search' | 'trending';
 
 interface UseExploreReturn {
   papers: PaperResponse[];
@@ -9,6 +11,7 @@ interface UseExploreReturn {
   hasMore: boolean;
   currentPage: number;
   searchPapers: (filters: ExploreFilters) => Promise<void>;
+  loadTrendingPapers: (page?: number) => Promise<void>;
   loadMore: () => Promise<void>;
   resetSearch: () => void;
 }
@@ -20,6 +23,7 @@ export const useExplore = (): UseExploreReturn => {
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [currentFilters, setCurrentFilters] = useState<ExploreFilters | null>(null);
+  const [mode, setMode] = useState<ExploreMode>('recommended');
   
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -61,6 +65,7 @@ export const useExplore = (): UseExploreReturn => {
     setError(null);
     setCurrentPage(0);
     setCurrentFilters(filters);
+    setMode('search');
 
     try {
       const queryParams = buildQueryParams(filters, 0);
@@ -93,8 +98,58 @@ export const useExplore = (): UseExploreReturn => {
     }
   }, []);
 
+  const loadTrendingPapers = useCallback(async (page: number = 0) => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    abortControllerRef.current = new AbortController();
+
+    setLoading(true);
+    setError(null);
+    setCurrentFilters(null);
+    setMode('trending');
+
+    try {
+      const response = await api.get(
+        `/explore/trending?page=${page}&size=20`,
+        { signal: abortControllerRef.current.signal }
+      );
+
+      if (response.data.success) {
+        const data = response.data.data;
+        const content = data.content || [];
+        if (page === 0) {
+          setPapers(content);
+        } else {
+          setPapers(prev => [...prev, ...content]);
+        }
+        setHasMore(!data.last);
+        setCurrentPage(page);
+      } else {
+        setError(response.data.message || 'Failed to fetch trending papers');
+        if (page === 0) {
+          setPapers([]);
+        }
+        setHasMore(false);
+      }
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        return;
+      }
+      console.error('Error fetching trending papers:', err);
+      setError(err.response?.data?.message || 'Failed to fetch trending papers');
+      if (page === 0) {
+        setPapers([]);
+      }
+      setHasMore(false);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const loadMore = useCallback(async () => {
-    if (!currentFilters || loading || !hasMore) return;
+    if (loading || !hasMore) return;
 
     // Cancel any ongoing request
     if (abortControllerRef.current) {
@@ -109,11 +164,25 @@ export const useExplore = (): UseExploreReturn => {
 
     try {
       const nextPage = currentPage + 1;
-      const queryParams = buildQueryParams(currentFilters, nextPage);
-      const response = await api.get(
-        `/explore?${queryParams}`,
-        { signal: abortControllerRef.current.signal }
-      );
+      let response;
+
+      if (mode === 'search' && currentFilters) {
+        const queryParams = buildQueryParams(currentFilters, nextPage);
+        response = await api.get(
+          `/explore?${queryParams}`,
+          { signal: abortControllerRef.current.signal }
+        );
+      } else if (mode === 'trending') {
+        response = await api.get(
+          `/explore/trending?page=${nextPage}&size=20`,
+          { signal: abortControllerRef.current.signal }
+        );
+      } else {
+        response = await api.get(
+          `/explore?page=${nextPage}&size=20`,
+          { signal: abortControllerRef.current.signal }
+        );
+      }
 
       if (response.data.success) {
         const data = response.data.data;
@@ -133,7 +202,7 @@ export const useExplore = (): UseExploreReturn => {
     } finally {
       setLoading(false);
     }
-  }, [currentFilters, loading, hasMore, currentPage]);
+  }, [currentFilters, loading, hasMore, currentPage, mode]);
 
   const resetSearch = useCallback(() => {
     // Cancel any ongoing request
@@ -145,6 +214,7 @@ export const useExplore = (): UseExploreReturn => {
     setError(null);
     setCurrentPage(0);
     setCurrentFilters(null);
+    setMode('recommended');
 
     // Load recommended papers (no filters)
     const loadRecommended = async () => {
@@ -183,6 +253,7 @@ export const useExplore = (): UseExploreReturn => {
     hasMore,
     currentPage,
     searchPapers,
+    loadTrendingPapers,
     loadMore,
     resetSearch
   };

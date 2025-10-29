@@ -1,95 +1,99 @@
 package com.researchhub.backend.controller;
 
-import com.researchhub.backend.dto.ApiResponse;
-import com.researchhub.backend.exception.ResourceNotFoundException;
-import com.researchhub.backend.model.Paper;
+import com.researchhub.backend.dto.LibraryItemDTO;
 import com.researchhub.backend.service.LibraryService;
-import com.researchhub.backend.service.PaperResponseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/library")
 public class LibraryController {
 
     private static final Logger logger = LoggerFactory.getLogger(LibraryController.class);
 
-    @Autowired
-    private LibraryService libraryService;
+    private final LibraryService libraryService;
 
-    @Autowired
-    private PaperResponseService paperResponseService;
-
-    @PostMapping("/library/add/{paperId}")
-    public ResponseEntity<ApiResponse<Void>> addToLibrary(@RequestParam("userId") UUID userId,
-                                                         @PathVariable("paperId") UUID paperId) {
-        try {
-            logger.info("Adding paper {} to library for user {}", paperId, userId);
-            libraryService.addToLibrary(userId, paperId);
-            return ResponseEntity.ok(ApiResponse.success("Paper added to library successfully", null));
-        } catch (ResourceNotFoundException e) {
-            logger.error("Resource not found when adding to library: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
-        } catch (Exception e) {
-            logger.error("Error adding paper to library: {}", e.getMessage(), e);
-            return ResponseEntity.internalServerError().body(ApiResponse.error("Failed to add paper to library"));
-        }
+    public LibraryController(LibraryService libraryService) {
+        this.libraryService = libraryService;
     }
 
-    @DeleteMapping("/library/remove/{paperId}")
-    public ResponseEntity<ApiResponse<Void>> removeFromLibrary(@RequestParam("userId") UUID userId,
-                                                              @PathVariable("paperId") UUID paperId) {
-        try {
-            logger.info("Removing paper {} from library for user {}", paperId, userId);
-            libraryService.removeFromLibrary(userId, paperId);
-            return ResponseEntity.ok(ApiResponse.success("Paper removed from library successfully", null));
-        } catch (ResourceNotFoundException e) {
-            logger.error("Resource not found when removing from library: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
-        } catch (Exception e) {
-            logger.error("Error removing paper from library: {}", e.getMessage(), e);
-            return ResponseEntity.internalServerError().body(ApiResponse.error("Failed to remove paper from library"));
+    @PostMapping("/{paperId}")
+    public ResponseEntity<LibraryItemDTO> add(
+            @PathVariable UUID paperId,
+            Authentication authentication
+    ) {
+        UUID userId = getUserId(authentication);
+        if (userId == null) {
+            logger.warn("Add to library denied for paper {} due to missing authentication", paperId);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
+        boolean alreadyExists = libraryService.isInLibrary(userId, paperId);
+        LibraryItemDTO item = libraryService.add(userId, paperId);
+        HttpStatus status = alreadyExists ? HttpStatus.OK : HttpStatus.CREATED;
+        logger.debug("Library add processed for user {} paper {} status {}", userId, paperId, status);
+        return ResponseEntity.status(status).body(item);
     }
 
-    @GetMapping("/users/{id}/library")
-    public ResponseEntity<ApiResponse<List<?>>> getUserLibrary(@PathVariable("id") String userId) {
+    @GetMapping
+    public ResponseEntity<Page<LibraryItemDTO>> list(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            Authentication authentication
+    ) {
+        UUID userId = getUserId(authentication);
+        if (userId == null) {
+            logger.warn("Library list requested without authentication");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<LibraryItemDTO> items = libraryService.list(userId, pageable);
+        logger.debug("Library list returned {} items for user {}", items.getNumberOfElements(), userId);
+        return ResponseEntity.ok(items);
+    }
+
+    @DeleteMapping("/{paperId}")
+    public ResponseEntity<Void> remove(
+            @PathVariable UUID paperId,
+            Authentication authentication
+    ) {
+        UUID userId = getUserId(authentication);
+        if (userId == null) {
+            logger.warn("Remove from library denied for paper {} due to missing authentication", paperId);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        libraryService.remove(userId, paperId);
+        logger.debug("Library remove processed for user {} paper {}", userId, paperId);
+        return ResponseEntity.noContent().build();
+    }
+
+    private UUID getUserId(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
         try {
-            logger.info("Getting library for user: {}", userId);
-            
-            // Parse UUID from string
-            UUID userIdUuid;
-            try {
-                userIdUuid = UUID.fromString(userId);
-            } catch (IllegalArgumentException e) {
-                logger.error("Invalid UUID format: {}", userId);
-                return ResponseEntity.badRequest().body(ApiResponse.error("Invalid user ID format"));
-            }
-            
-            List<Paper> papers = libraryService.getUserLibrary(userIdUuid);
-            
-            // Convert to PaperResponse for consistent API format
-            List<?> responseData = papers.stream()
-                    .map(paperResponseService::toPaperResponse)
-                    .toList();
-            
-            logger.info("Found {} papers in library for user {}", responseData.size(), userId);
-            return ResponseEntity.ok(ApiResponse.success(responseData));
-            
-        } catch (ResourceNotFoundException e) {
-            logger.error("User not found: {}", userId);
-            return ResponseEntity.badRequest().body(ApiResponse.error("User not found"));
-        } catch (Exception e) {
-            logger.error("Error getting user library: {}", e.getMessage(), e);
-            return ResponseEntity.internalServerError().body(ApiResponse.error("Failed to load library"));
+            return UUID.fromString(authentication.getName());
+        } catch (IllegalArgumentException ex) {
+            logger.warn("Authentication principal [{}] is not a valid UUID", authentication.getName());
+            return null;
         }
     }
 }
-
-

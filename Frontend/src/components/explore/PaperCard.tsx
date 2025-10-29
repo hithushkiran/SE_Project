@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { PaperResponse } from '../../types/explore';
 import { commentService } from '../../services/commentService';
-import { libraryService } from '../../services/libraryService';
+import { libraryApi } from '../../services/libraryApi';
 import { api } from '../../api/axios';
 import './PaperCard.css';
 import { useAuth } from '../../contexts/AuthContext';
+import { AxiosError } from 'axios';
 
 interface PaperCardProps {
   paper: PaperResponse;
@@ -50,7 +51,7 @@ const PaperCard: React.FC<PaperCardProps> = ({ paper, onClick, initialSaved = fa
     });
   };
 
-  const incrementViewCount = async () => {
+  const incrementViewCount = async (): Promise<PaperResponse | null> => {
     try {
       const response = await api.post(`/api/papers/${paper.id}/view`);
       if (response.data.success) {
@@ -59,21 +60,26 @@ const PaperCard: React.FC<PaperCardProps> = ({ paper, onClick, initialSaved = fa
         if (onViewCountUpdate) {
           onViewCountUpdate(paper.id, newViewCount);
         }
+        return response.data.data;
       }
     } catch (error) {
       console.error('Failed to increment view count:', error);
     }
+
+    return null;
   };
 
   const handleClick = async () => {
     // Increment view count first
-    await incrementViewCount();
-    
+    const updatedPaper = await incrementViewCount();
+    const nextPaper = updatedPaper ?? { ...paper, viewCount };
+
     if (onClick) {
-      onClick(paper);
+      onClick(nextPaper);
     } else {
       // Default navigation to paper details
-      navigate(`/papers/${paper.id}`);
+      const navigationState = updatedPaper ? { state: { paper: updatedPaper } } : undefined;
+      navigate(`/papers/${paper.id}`, navigationState);
     }
   };
 
@@ -89,23 +95,39 @@ const PaperCard: React.FC<PaperCardProps> = ({ paper, onClick, initialSaved = fa
   };
 
   const handleToggleLibrary = async (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     const nextState = !isSaved;
     setIsSaved(nextState);
     try {
       if (!user?.id) throw new Error('User not authenticated');
       if (nextState) {
-        await libraryService.addToLibrary(paper.id, user.id);
+        console.debug('[lib] add', { paperId: paper.id, from: 'PaperCard' });
+        const data = await libraryApi.add(paper.id);
+        console.debug('[lib] added', { paperId: paper.id, data });
+        window.dispatchEvent(new CustomEvent('library:updated', { detail: { paperId: paper.id, action: 'added' } }));
       } else {
-        await libraryService.removeFromLibrary(paper.id, user.id);
+        console.debug('[lib] remove', { paperId: paper.id, from: 'PaperCard' });
+        await libraryApi.remove(paper.id);
+        console.debug('[lib] removed', { paperId: paper.id });
         if (onRemovedFromLibrary) {
           onRemovedFromLibrary(paper.id);
         }
+        window.dispatchEvent(new CustomEvent('library:updated', { detail: { paperId: paper.id, action: 'removed' } }));
       }
     } catch (error) {
+      const axiosError = error as AxiosError;
+      const statusCode = axiosError.response?.status;
+
+      if (nextState && statusCode && (statusCode === 409 || statusCode === 422)) {
+        // Treat duplicate-add responses as success
+        setIsSaved(true);
+        return;
+      }
+
       // Revert on error
       setIsSaved(!nextState);
-      console.error('Library toggle failed:', error);
+      console.error('[lib] toggle failed', paper.id, statusCode, axiosError.response?.data ?? error);
     }
   };
 
