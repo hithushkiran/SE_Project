@@ -4,6 +4,12 @@ export interface CategoryResponse {
   description: string;
 }
 
+export interface AuthorInfo {
+  id: string;
+  name: string | null;
+  maskedEmail: string | null;
+}
+
 export interface PaperResponse {
   id: string;
   title: string;
@@ -16,6 +22,7 @@ export interface PaperResponse {
   uploadedById: string;
   uploadedByName: string;
   canEdit: boolean;
+  authorInfo?: AuthorInfo | null;
 }
 
 export interface ExploreFilters {

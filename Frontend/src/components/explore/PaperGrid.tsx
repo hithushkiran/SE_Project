@@ -10,6 +10,9 @@ interface PaperGridProps {
   hasMore: boolean;
   onLoadMore: () => void;
   isSearching: boolean;
+  title?: string;
+  emptyTitle?: string;
+  emptyMessage?: string;
 }
 
 const PaperGrid: React.FC<PaperGridProps> = ({
@@ -18,13 +21,25 @@ const PaperGrid: React.FC<PaperGridProps> = ({
   error,
   hasMore,
   onLoadMore,
-  isSearching
+  isSearching,
+  title,
+  emptyTitle,
+  emptyMessage
 }) => {
+  const headerTitle = title ?? (isSearching ? 'Search Results' : 'Recommended for You');
+  const emptyStateTitle = emptyTitle ?? (isSearching ? 'No papers found' : 'No papers available');
+  const emptyStateMessage =
+    emptyMessage ??
+    (isSearching
+      ? 'Try adjusting your search criteria or filters'
+      : 'Check back later for new research papers');
+  const emptyIcon = isSearching ? '�Y"?' : '�Y""';
+
   if (error) {
     return (
       <div className="paper-grid-error">
         <div className="error-content">
-          <div className="error-icon">⚠️</div>
+          <div className="error-icon">�s���?</div>
           <h3>Something went wrong</h3>
           <p>{error}</p>
           <button onClick={() => window.location.reload()} className="retry-button">
@@ -50,18 +65,9 @@ const PaperGrid: React.FC<PaperGridProps> = ({
     return (
       <div className="paper-grid-empty">
         <div className="empty-content">
-          <div className="empty-icon">
-            {isSearching ? '🔍' : '📄'}
-          </div>
-          <h3>
-            {isSearching ? 'No papers found' : 'No papers available'}
-          </h3>
-          <p>
-            {isSearching 
-              ? 'Try adjusting your search criteria or filters'
-              : 'Check back later for new research papers'
-            }
-          </p>
+          <div className="empty-icon">{emptyIcon}</div>
+          <h3>{emptyStateTitle}</h3>
+          <p>{emptyStateMessage}</p>
         </div>
       </div>
     );
@@ -70,16 +76,14 @@ const PaperGrid: React.FC<PaperGridProps> = ({
   return (
     <div className="paper-grid">
       <div className="paper-grid-header">
-        <h2>
-          {isSearching ? 'Search Results' : 'Recommended for You'}
-        </h2>
+        <h2>{headerTitle}</h2>
         <span className="paper-count">
           {papers.length} paper{papers.length !== 1 ? 's' : ''}
         </span>
       </div>
 
       <div className="papers-container">
-        {papers.map(paper => (
+        {papers.map((paper) => (
           <PaperCard key={paper.id} paper={paper} />
         ))}
       </div>

@@ -1,35 +1,12 @@
 import { api } from './api';
+import { PaperResponse, PaginatedResponse } from '../types/explore';
 
-export interface PaperResponse {
-  id: string;
-  title: string;
-  author: string;
-  abstractSnippet: string;
-  uploadedAt: string;
-  publicationYear: number;
-  filePath: string;
-  categories: any[];
-  uploadedById: string;
-  uploadedByName: string;
-  canEdit: boolean;
-}
+export type { PaperResponse, PaginatedResponse } from '../types/explore';
 
 export interface ApiResponse<T> {
   success: boolean;
   message: string;
   data: T;
-}
-
-export interface PaginatedResponse<T> {
-  content: T[];
-  pageable: {
-    pageNumber: number;
-    pageSize: number;
-  };
-  totalElements: number;
-  totalPages: number;
-  last: boolean;
-  first: boolean;
 }
 
 export const paperService = {
