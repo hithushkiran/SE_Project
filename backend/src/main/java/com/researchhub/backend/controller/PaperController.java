@@ -73,6 +73,12 @@ public class PaperController {
         @RequestParam(value = "categoryIds", required = false) List<UUID> categoryIds,
         Authentication authentication) {
 
+        System.out.println("=== CONTROLLER uploadPaperWithCategories ===");
+        System.out.println("File: " + (file != null ? file.getOriginalFilename() : "null"));
+        System.out.println("Title: " + title);
+        System.out.println("CategoryIds received in controller: " + categoryIds);
+        System.out.println("CategoryIds size: " + (categoryIds != null ? categoryIds.size() : "null"));
+
         try {
             Paper savedPaper = paperService.uploadPaperWithCategories(file, title, author, publicationYear, abstractText, categoryIds);
             PaperResponse response = paperResponseService.toPaperResponse(savedPaper);
@@ -121,6 +127,11 @@ public class PaperController {
         try {
             Paper paper = paperService.getPaperById(id);
             PaperResponse response = paperResponseService.toPaperResponse(paper);
+            System.out.println("=== CONTROLLER getPaperById - Response ===");
+            System.out.println("Response categories size: " + response.getCategories().size());
+            response.getCategories().forEach(cat -> 
+                System.out.println("  Response category: " + cat.getName() + " (ID: " + cat.getId() + ")")
+            );
             return ResponseEntity.ok(ApiResponse.success(response));
 
         } catch (Exception e) {

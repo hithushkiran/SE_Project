@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { authService } from '../services/authService';
-import { UpdateProfileRequest } from '../types/auth';
+import { categoryService } from '../services/categoryService';
+import { UpdateProfileRequest, Category } from '../types/auth';
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -15,8 +16,11 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
     affiliation: '',
     bio: '',
     website: '',
-    avatarUrl: ''
+    avatarUrl: '',
+    categoryIds: []
   });
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [userInterests, setUserInterests] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -26,8 +30,27 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
         affiliation: user.affiliation || '',
         bio: user.bio || '',
         website: user.website || '',
-        avatarUrl: user.avatarUrl || ''
+        avatarUrl: user.avatarUrl || '',
+        categoryIds: []
       });
+
+      // Fetch categories and user interests
+      const fetchData = async () => {
+        try {
+          const [categoriesData, interestsData] = await Promise.all([
+            categoryService.getAllCategories(),
+            authService.getInterests()
+          ]);
+          setCategories(categoriesData);
+          const interestIds = interestsData.map(interest => interest.id);
+          setUserInterests(interestIds);
+          setFormData(prev => ({ ...prev, categoryIds: interestIds }));
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+
+      fetchData();
     }
   }, [user, isOpen]);
 
@@ -36,10 +59,24 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
     setLoading(true);
     
     try {
-      await authService.updateProfile(formData);
+      // Update profile information (without categoryIds)
+      const profileData = {
+        fullName: formData.fullName,
+        affiliation: formData.affiliation,
+        bio: formData.bio,
+        website: formData.website,
+        avatarUrl: formData.avatarUrl
+      };
+      await authService.updateProfile(profileData);
+      
+      // Update interests separately
+      if (formData.categoryIds) {
+        await authService.updateInterests(formData.categoryIds);
+      }
+      
       // Update user context with new data
       if (user) {
-        updateUser({ ...user, ...formData });
+        updateUser({ ...user, ...profileData });
       }
       onClose();
     } catch (error) {
@@ -53,6 +90,16 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleCategoryToggle = (categoryId: string) => {
+    setFormData(prev => {
+      const categoryIds = prev.categoryIds || [];
+      const newCategoryIds = categoryIds.includes(categoryId)
+        ? categoryIds.filter(id => id !== categoryId)
+        : [...categoryIds, categoryId];
+      return { ...prev, categoryIds: newCategoryIds };
+    });
   };
 
   if (!isOpen) return null;
@@ -125,6 +172,30 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
               onChange={handleChange}
               placeholder="https://example.com/avatar.jpg"
             />
+          </div>
+
+          <div className="input-row">
+            <label>Research Interests</label>
+            <div className="category-selection">
+              {categories.length === 0 ? (
+                <p className="no-categories">Loading categories...</p>
+              ) : (
+                <div className="category-chips">
+                  {categories.map(category => (
+                    <div
+                      key={category.id}
+                      className={`category-chip ${(formData.categoryIds || []).includes(category.id) ? 'selected' : ''}`}
+                      onClick={() => handleCategoryToggle(category.id)}
+                    >
+                      {category.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <small style={{ display: 'block', marginTop: '0.5rem', color: '#6c757d' }}>
+              Select your research interests to get personalized recommendations
+            </small>
           </div>
 
           <div className="modal-actions">

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="44964c0e-c783-453a-a764-483ddd9e988a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Frontend/.vite/deps/_metadata.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/.vite/deps/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/NotificationBell.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/NotificationBell.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/PDFSummarizer.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/PDFSummarizer.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/admin/AdminDashboard.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/admin/AdminDashboard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/admin/AdminPanel.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/admin/AdminPanel.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/admin/CommentModeration.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/admin/CommentModeration.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/admin/NotificationCenter.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/admin/NotificationCenter.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/admin/PaperModeration.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/admin/PaperModeration.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/admin/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/admin/UserManagement.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/components/admin/UserManagement.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/pages/AdminLoginPage.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/pages/AdminLoginPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/pages/AdminSignupPage.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/pages/AdminSignupPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/pages/NotificationsPage.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/pages/NotificationsPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/services/adminService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/src/services/notificationService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/config/DevDataInitializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/controller/AdminController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/controller/DevController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/controller/NotificationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/dto/AdminDashboardStats.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/dto/NotificationResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/model/CommentStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/model/Notification.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/model/NotificationType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/model/PaperStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/model/RelatedEntityType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/repository/NotificationRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/service/AdminService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/service/NotificationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/uploads/3e0ef51e-895a-4546-810e-2e877397eb1f.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/uploads/e5996ac0-70ef-4725-bdbb-84a87ed36231.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/SE_Project.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/.env" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/api/axios.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/api/axios.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/components/Header.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/Header.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/components/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/components/MainContent.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/MainContent.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/components/MainContent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/MainContent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/components/PaperDetailsCard.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/PaperDetailsCard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/components/PaperDetailsCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/PaperDetailsCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/components/PublishPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/PublishPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/components/ViewPdfButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/ViewPdfButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/LoginPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/LoginPage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/LoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/LoginPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/services/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/services/api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/services/authService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/services/authService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/types/auth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/types/auth.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/vite.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/controller/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/controller/CommentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/dto/CommentResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/dto/CommentResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/dto/PaperResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/dto/PaperResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/dto/UserResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/dto/UserResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/model/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/model/Comment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/model/Paper.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/model/Paper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/repository/CommentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/repository/CommentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/repository/PaperRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/repository/PaperRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/researchhub/backend/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/schema.sql" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "hithushkiran"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/hithushkiran/SE_Project.git",
+    "accountId": "e704f48b-c02c-465e-927c-479dd4d0b1ed"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="35exfIXu1HRs0itGDC6C28zf3ve" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "Hithush-backup",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="backend" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.researchhub.backend.BackendApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="44964c0e-c783-453a-a764-483ddd9e988a" name="Changes" comment="" />
+      <created>1763484445705</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1763484445705</updated>
+      <workItem from="1763484448603" duration="1686000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
