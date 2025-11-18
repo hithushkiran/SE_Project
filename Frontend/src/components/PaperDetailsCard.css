@@ -56,6 +56,84 @@
   font-size: 1rem;
 }
 
+.paper-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.ai-summary-button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.ai-summary-button:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+
+.summary-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.summary-box {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  color: #0c4a6e;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.summary-header {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.summary-timestamp {
+  font-size: 0.85rem;
+  color: #075985;
+  margin-bottom: 0.5rem;
+}
+
+.summary-text {
+  line-height: 1.6;
+  margin: 0.25rem 0 0.75rem;
+}
+
+.summary-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.summary-disclaimer {
+  color: #0369a1;
+}
+
+.summary-copy-btn {
+  background: #e0f2fe;
+  color: #075985;
+  border: 1px solid #7dd3fc;
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+}
+
+.summary-copy-btn:hover {
+  background: #bae6fd;
+}
+
 @media (max-width: 768px) {
   .paper-details-card {
     padding: 1.5rem;
