@@ -86,7 +86,7 @@ const PublishPage = () => {
         uploadData.append('bookId', formData.bookId);
       }
 
-      const response = await multipartApi.post('/api/papers/upload', uploadData, {
+      const response = await multipartApi.post('/papers/upload', uploadData, {
         onUploadProgress: (progressEvent) => {
           const progress = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total

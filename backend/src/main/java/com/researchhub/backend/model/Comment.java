@@ -39,6 +39,20 @@ public class Comment {
     @Column(name = "edited")
     private boolean edited = false;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private CommentStatus status = CommentStatus.APPROVED;
+
+    @Column(name = "moderation_reason", columnDefinition = "TEXT")
+    private String moderationReason;
+
+    @Column(name = "moderated_at")
+    private LocalDateTime moderatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "moderated_by")
+    private User moderatedBy;
+
     @PrePersist
     protected void onCreate() {
         this.id = UUID.randomUUID();

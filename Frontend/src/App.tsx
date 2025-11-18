@@ -11,7 +11,11 @@ import ProfilePage from './pages/ProfilePage';
 import ExplorePage from './pages/ExplorePage';
 import CommentSection from './pages/CommentSection';
 import PaperDetailsPage from './pages/PaperDetailsPage';
+import NotificationsPage from './pages/NotificationsPage';
+import AdminLoginPage from './pages/AdminLoginPage';
+import AdminPanel from './components/admin/AdminPanel';
 import './App.css';
+import PDFSummarizer from './components/PDFSummarizer';
 
 // Dashboard component that requires authentication
 const Dashboard: React.FC = () => {
@@ -37,8 +41,8 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="app">
-      {/* Show header on all routes for testing */}
-      <Header />
+      {/* Show header only when authenticated to avoid duplicate nav on login pages */}
+      {isAuthenticated && <Header />}
       
       <Routes>
         {/* Public routes */}
@@ -46,6 +50,20 @@ const AppContent: React.FC = () => {
           path="/login" 
           element={
             !isAuthenticated ? <LoginPage /> : <Navigate to="/dashboard" replace />
+          } 
+        />
+        
+        <Route 
+          path="/admin/signup" 
+          element={
+            <Navigate to="/admin/login" replace />
+          } 
+        />
+        
+        <Route 
+          path="/admin/login" 
+          element={
+            !isAuthenticated ? <AdminLoginPage /> : <Navigate to="/admin" replace />
           } 
         />
         
@@ -64,6 +82,15 @@ const AppContent: React.FC = () => {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path="/summary" 
+          element={
+            <ProtectedRoute>
+              <PDFSummarizer />
             </ProtectedRoute>
           } 
         />
@@ -100,6 +127,24 @@ const AppContent: React.FC = () => {
           element={
             <ProtectedRoute>
               <PublishPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route 
+          path="/notifications" 
+          element={
+            <ProtectedRoute>
+              <NotificationsPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route 
+          path="/admin" 
+          element={
+            <ProtectedRoute>
+              <AdminPanel />
             </ProtectedRoute>
           }
         />

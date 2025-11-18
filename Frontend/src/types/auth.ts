@@ -27,5 +27,6 @@ export interface UserResponse {
   website?: string;
   avatarUrl?: string;
   emailVerified: boolean;
-  role: string;
+  role: 'USER' | 'RESEARCHER' | 'ADMIN';
+  createdAt?: string;
 }
