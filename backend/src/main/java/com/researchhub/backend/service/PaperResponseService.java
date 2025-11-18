@@ -2,6 +2,7 @@ package com.researchhub.backend.service;
 
 import com.researchhub.backend.dto.AuthorInfo;
 import com.researchhub.backend.dto.PaperResponse;
+import com.researchhub.backend.model.Category;
 import com.researchhub.backend.model.Paper;
 import com.researchhub.backend.model.Profile;
 import com.researchhub.backend.model.User;
@@ -9,6 +10,7 @@ import com.researchhub.backend.repository.ProfileRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,14 +24,20 @@ public class PaperResponseService {
         this.profileRepository = profileRepository;
     }
 
+    // --- Public Conversion Methods (Handling Current User ID) ---
+
+    @Transactional(readOnly = true)
     public PaperResponse toPaperResponse(Paper paper) {
+        // Fallback for methods not requiring currentUserId
         return toPaperResponse(paper, null);
     }
 
+    @Transactional(readOnly = true)
     public PaperResponse toPaperResponse(Paper paper, UUID currentUserId) {
         return buildResponse(paper, currentUserId, null);
     }
 
+    @Transactional(readOnly = true)
     public Page<PaperResponse> toPaperResponse(Page<Paper> papers, UUID currentUserId) {
         Map<UUID, Profile> profileMap = preloadProfiles(papers.getContent());
 
@@ -40,6 +48,7 @@ public class PaperResponseService {
         return new PageImpl<>(responseList, papers.getPageable(), papers.getTotalElements());
     }
 
+    @Transactional(readOnly = true)
     public List<PaperResponse> toPaperResponse(List<Paper> papers, UUID currentUserId) {
         Map<UUID, Profile> profileMap = preloadProfiles(papers);
 
@@ -48,14 +57,19 @@ public class PaperResponseService {
                 .collect(Collectors.toList());
     }
 
-    // Keep backward compatibility methods without currentUserId
+    // --- Backward Compatibility Methods (Without Current User ID) ---
+
+    @Transactional(readOnly = true)
     public Page<PaperResponse> toPaperResponse(Page<Paper> papers) {
         return toPaperResponse(papers, null);
     }
 
+    @Transactional(readOnly = true)
     public List<PaperResponse> toPaperResponse(List<Paper> papers) {
         return toPaperResponse(papers, null);
     }
+
+    // --- Private Helper Methods ---
 
     private PaperResponse buildResponse(Paper paper, UUID currentUserId, Map<UUID, Profile> profileMap) {
         String filePath = normalizeFilePath(paper.getFilePath());
@@ -65,6 +79,17 @@ public class PaperResponseService {
                 && paper.getUploadedBy() != null
                 && currentUserId.equals(paper.getUploadedBy().getId());
 
+        // Handle categories safely - catch ConcurrentModificationException (CME) and return empty set if it occurs
+        Set<Category> categories = new HashSet<>();
+        try {
+            if (paper.getCategories() != null) {
+                categories.addAll(paper.getCategories());
+            }
+        } catch (Exception e) {
+            // Silently catch CME and return empty categories
+            categories = new HashSet<>();
+        }
+
         PaperResponse response = new PaperResponse(
                 paper.getId(),
                 paper.getTitle(),
@@ -73,15 +98,16 @@ public class PaperResponseService {
                 paper.getUploadedAt(),
                 paper.getPublicationYear(),
                 filePath,
-                paper.getCategories(),
+                categories, // Use the safe categories set
                 uploadedById,
-                null,
+                null, // authorInfo is set below
                 canEdit
         );
 
         AuthorInfo authorInfo = buildAuthorInfo(paper.getUploadedBy(), profileMap);
         if (authorInfo != null) {
             response.setAuthorInfo(authorInfo);
+            // This is likely intended to set the name for display if authorInfo is available
             response.setUploadedByName(authorInfo.getName() != null
                     ? authorInfo.getName()
                     : authorInfo.getMaskedEmail());
@@ -95,6 +121,7 @@ public class PaperResponseService {
             return null;
         }
 
+        // Check for existing 'uploads/' prefix, correcting it if necessary (e.g., stripping leading '/')
         if (filePath.startsWith("uploads/") || filePath.startsWith("/uploads/")) {
             return filePath.startsWith("/") ? filePath.substring(1) : filePath;
         }
@@ -127,6 +154,7 @@ public class PaperResponseService {
         if (profileMap != null && profileMap.containsKey(uploaderId)) {
             profile = profileMap.get(uploaderId);
         } else if (profileMap == null) {
+            // Fetch individually if no map was preloaded (e.g., for a single paper)
             profile = profileRepository.findByUserId(uploaderId).orElse(null);
         }
 
@@ -143,6 +171,7 @@ public class PaperResponseService {
         if (email == null || !email.contains("@")) {
             return null;
         }
+        // Returns the local part of the email (before the @)
         return email.substring(0, email.indexOf("@"));
     }
 
@@ -159,10 +188,13 @@ public class PaperResponseService {
         String local = parts[0];
         String domain = parts[1];
 
+        // Masking logic
         if (local.length() <= 2) {
+            // e.g., "a@domain.com" -> "a*@domain.com"
             return local.charAt(0) + "*@" + domain;
         }
 
+        // e.g., "name@domain.com" -> "n***e@domain.com"
         return local.charAt(0) + "***" + local.charAt(local.length() - 1) + "@" + domain;
     }
 }

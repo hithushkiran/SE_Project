@@ -65,7 +65,7 @@ export const useExplore = (): UseExploreReturn => {
     try {
       const queryParams = buildQueryParams(filters, 0);
       const response = await api.get(
-        `/explore?${queryParams}`,
+        `explore?${queryParams}`,
         { signal: abortControllerRef.current.signal }
       );
 
@@ -111,7 +111,7 @@ export const useExplore = (): UseExploreReturn => {
       const nextPage = currentPage + 1;
       const queryParams = buildQueryParams(currentFilters, nextPage);
       const response = await api.get(
-        `/explore?${queryParams}`,
+        `explore?${queryParams}`,
         { signal: abortControllerRef.current.signal }
       );
 
@@ -150,7 +150,7 @@ export const useExplore = (): UseExploreReturn => {
     const loadRecommended = async () => {
       try {
         const response = await api.get(
-          '/explore?page=0&size=20'
+          'explore?page=0&size=20'
         );
 
         if (response.data.success) {

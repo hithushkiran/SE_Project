@@ -99,6 +99,121 @@
   font-size: 14px;
 }
 
+/* AI Search Toggle */
+.ai-search-toggle {
+  margin-bottom: 16px;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-checkbox {
+  display: none;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: #ccc;
+  border-radius: 12px;
+  transition: background 0.3s;
+}
+
+.toggle-switch::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.toggle-checkbox:checked + .toggle-switch {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.toggle-checkbox:checked + .toggle-switch::before {
+  transform: translateX(20px);
+}
+
+.toggle-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.ai-hint {
+  margin-top: 8px;
+  margin-left: 54px;
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+}
+
+/* Search Loading State */
+.search-loading {
+  position: absolute;
+  right: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #667eea;
+  font-weight: 500;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Search Button */
+.search-button {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.search-button:hover {
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.search-button:active {
+  transform: translateY(-50%) scale(0.98);
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .search-input {
@@ -120,5 +235,15 @@
   
   .suggestion-item {
     padding: 0.625rem 0.875rem;
+  }
+
+  .search-button {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .ai-hint {
+    margin-left: 0;
+    font-size: 11px;
   }
 }

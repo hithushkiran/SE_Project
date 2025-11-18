@@ -24,4 +24,6 @@
       <module name="backend" options="-parameters" />
     </option>
   </component>
+    </annotationProcessing>
+  </component>
 </project>

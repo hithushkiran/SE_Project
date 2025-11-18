@@ -1,5 +1,5 @@
 import { api } from './api';
-import { LoginRequest, RegisterRequest, UpdateProfileRequest, UserResponse } from '../types/auth';
+import { LoginRequest, RegisterRequest, UpdateProfileRequest, UserResponse, Category } from '../types/auth';
 
 export const authService = {
   async login(credentials: LoginRequest): Promise<void> {
@@ -20,11 +20,11 @@ export const authService = {
   },
 
   async register(userData: RegisterRequest): Promise<void> {
-    await api.post('/auth/signup', userData);
+    await api.post('auth/signup', userData);
   },
 
   async logout(): Promise<void> {
-    await api.post('/auth/logout');
+    await api.post('auth/logout');
   },
 
   async getProfile(): Promise<UserResponse> {
@@ -43,6 +43,15 @@ export const authService = {
   },
 
   async updateProfile(profileData: UpdateProfileRequest): Promise<void> {
-    await api.put('/auth/profile', profileData);
+    await api.put('auth/profile', profileData);
+  },
+
+  async updateInterests(categoryIds: string[]): Promise<void> {
+    await api.put('profile/interests', { categoryIds });
+  },
+
+  async getInterests(): Promise<Category[]> {
+    const response = await api.get('profile/interests');
+    return response.data.data || [];
   },
 };

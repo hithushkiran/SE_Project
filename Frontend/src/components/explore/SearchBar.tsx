@@ -4,18 +4,29 @@ import './SearchBar.css';
 interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
+  onSearch?: () => void;
   placeholder?: string;
   suggestions?: string[];
   onSuggestionSelect?: (suggestion: string) => void;
+  aiSearchEnabled?: boolean;
+  onAiSearchToggle?: (enabled: boolean) => void;
+  isLoading?: boolean;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
   value,
   onChange,
+  onSearch,
   placeholder = "Search...",
   suggestions = [],
-  onSuggestionSelect
+  onSuggestionSelect,
+  aiSearchEnabled = false,
+  onAiSearchToggle,
+  isLoading = false
 }) => {
+  const effectivePlaceholder = aiSearchEnabled 
+    ? "Try: 'machine learning papers from 2023' or 'AI research by John Smith'" 
+    : placeholder;
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -60,6 +71,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && onSearch) {
+      e.preventDefault();
+      if (focusedIndex >= 0 && focusedIndex < suggestions.length) {
+        handleSuggestionClick(suggestions[focusedIndex]);
+      } else {
+        onSearch();
+      }
+      return;
+    }
+
     if (!showSuggestions || suggestions.length === 0) return;
 
     switch (e.key) {
@@ -75,12 +96,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
           prev > 0 ? prev - 1 : suggestions.length - 1
         );
         break;
-      case 'Enter':
-        e.preventDefault();
-        if (focusedIndex >= 0 && focusedIndex < suggestions.length) {
-          handleSuggestionClick(suggestions[focusedIndex]);
-        }
-        break;
       case 'Escape':
         setShowSuggestions(false);
         setFocusedIndex(-1);
@@ -95,6 +110,28 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <div className="search-bar-container">
+      {onAiSearchToggle && (
+        <div className="ai-search-toggle">
+          <label className="toggle-label">
+            <input
+              type="checkbox"
+              checked={aiSearchEnabled}
+              onChange={(e) => onAiSearchToggle(e.target.checked)}
+              className="toggle-checkbox"
+            />
+            <span className="toggle-switch"></span>
+            <span className="toggle-text">
+              ✨ Natural Language AI Search
+            </span>
+          </label>
+          {aiSearchEnabled && (
+            <div className="ai-hint">
+              Try queries like "machine learning papers from 2023" or "research by John Doe"
+            </div>
+          )}
+        </div>
+      )}
+      
       <div className="search-input-wrapper">
         <input
           ref={inputRef}
@@ -103,17 +140,36 @@ const SearchBar: React.FC<SearchBarProps> = ({
           onChange={handleInputChange}
           onFocus={handleInputFocus}
           onKeyDown={handleKeyDown}
-          placeholder={placeholder}
+          placeholder={effectivePlaceholder}
           className="search-input"
+          disabled={isLoading}
         />
         <div className="search-icon">🔍</div>
-        {value && (
+        
+        {isLoading && (
+          <div className="search-loading">
+            <div className="spinner"></div>
+            <span>AI is thinking...</span>
+          </div>
+        )}
+        
+        {value && !isLoading && (
           <button
             className="clear-button"
             onClick={() => onChange('')}
             type="button"
           >
             ✕
+          </button>
+        )}
+        
+        {onSearch && !isLoading && (
+          <button 
+            onClick={onSearch}
+            className="search-button"
+            type="button"
+          >
+            Search
           </button>
         )}
       </div>

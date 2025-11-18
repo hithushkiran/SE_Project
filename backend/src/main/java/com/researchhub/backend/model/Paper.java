@@ -67,13 +67,12 @@ public class Paper {
 
 
     // Categories associated with this paper
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "paper_categories",
             joinColumns = @JoinColumn(name = "paper_id", columnDefinition = "BINARY(16)"),
             inverseJoinColumns = @JoinColumn(name = "category_id", columnDefinition = "BINARY(16)")
     )
-    @JsonIgnore
     private Set<Category> categories = new HashSet<>();
 
     // Comments on this paper

@@ -1,6 +1,7 @@
 
 package com.researchhub.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.researchhub.backend.util.UuidBinaryConverter;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class Category {
     private String description;
 
     @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
     private Set<Paper> papers = new HashSet<>();
 
     @PrePersist

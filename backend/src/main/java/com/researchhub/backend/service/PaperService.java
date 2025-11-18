@@ -20,7 +20,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.UUID;
 
 @Service
 public class PaperService {
@@ -34,16 +33,16 @@ public class PaperService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    // ===== YOUR EXISTING METHODS =====
+    @Autowired
+    private UserRepository userRepository;
+
+    // --- EXISTING UPLOAD METHODS ---
 
     @Transactional
     public Paper uploadPaper(UUID uploadedByUserId, MultipartFile file, String title, String author) throws IOException {
         // Delegate to the full method with null year & abstract
         return uploadPaper(uploadedByUserId, file, title, author, null, null);
     }
-
-    @Autowired
-    private UserRepository userRepository;
 
     /**
      * Overloaded upload accepting publicationYear & abstractText.
@@ -111,11 +110,20 @@ public class PaperService {
         paperRepository.delete(paper);
     }
 
-    // ===== NEW METHODS NEEDED FOR CONTROLLER =====
+    // --- NEW METHODS NEEDED FOR CONTROLLER ---
 
+    @Transactional(readOnly = true)
     public Paper getPaperById(UUID id) {
-        return paperRepository.findById(id)
+        System.out.println("=== getPaperById ===");
+        System.out.println("Fetching paper with ID: " + id);
+        Paper paper = paperRepository.findByIdWithCategories(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Paper not found with id: " + id));
+        System.out.println("Paper found: " + paper.getTitle());
+        System.out.println("Paper has " + (paper.getCategories() != null ? paper.getCategories().size() : "null") + " categories");
+        if (paper.getCategories() != null && !paper.getCategories().isEmpty()) {
+            paper.getCategories().forEach(cat -> System.out.println("  - Category: " + cat.getName()));
+        }
+        return paper;
     }
 
     public List<Paper> getAllPapers() {
@@ -123,7 +131,7 @@ public class PaperService {
     }
 
     /**
-     * NEW: Upload paper with categories in one operation
+     * NEW: Upload paper with categories in one operation (basic version)
      */
     @Transactional
     public Paper uploadPaperWithCategories(UUID uploadedByUserId, MultipartFile file, String title, String author, List<UUID> categoryIds) throws IOException {
@@ -135,16 +143,25 @@ public class PaperService {
     }
 
     /**
-     * Overload supporting publicationYear & abstractText.
+     * Overload supporting publicationYear & abstractText. (Cleaned-up version)
      */
+    @Transactional // Added @Transactional to the signature line
     public Paper uploadPaperWithCategories(UUID uploadedByUserId, MultipartFile file, String title, String author,
                                            Integer publicationYear, String abstractText,
                                            List<UUID> categoryIds) throws IOException {
-        // First upload with extended metadata
+        System.out.println("=== uploadPaperWithCategories (Extended) ===");
+        System.out.println("Category IDs received: " + categoryIds);
+
+        // First upload with extended metadata - calling the correct overload
         Paper paper = uploadPaper(uploadedByUserId, file, title, author, publicationYear, abstractText);
+        System.out.println("Paper uploaded with ID: " + paper.getId());
 
         if (categoryIds != null && !categoryIds.isEmpty()) {
+            System.out.println("Assigning " + categoryIds.size() + " categories to paper");
             paper = assignCategoriesToPaper(paper.getId(), categoryIds);
+            System.out.println("Categories assigned. Paper now has " + paper.getCategories().size() + " categories");
+        } else {
+            System.out.println("No categories to assign (categoryIds is null or empty)");
         }
 
         return paper;
@@ -155,30 +172,63 @@ public class PaperService {
      */
     @Transactional
     public Paper assignCategoriesToPaper(UUID paperId, List<UUID> categoryIds) {
+        System.out.println("=== assignCategoriesToPaper START ===");
+        System.out.println("Paper ID: " + paperId);
+        System.out.println("Category IDs to assign: " + categoryIds);
+
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new ResourceNotFoundException("Paper not found with id: " + paperId));
 
+        System.out.println("Paper found: " + paper.getTitle());
+        System.out.println("Current categories count: " + (paper.getCategories() != null ? paper.getCategories().size() : 0));
+
         if (categoryIds == null || categoryIds.isEmpty()) {
             // Clear categories if empty list provided
-            paper.getCategories().clear();
+            if (paper.getCategories() != null) {
+                paper.getCategories().clear();
+            }
+            System.out.println("Cleared all categories");
         } else {
             // Get categories from database
             List<Category> categories = categoryRepository.findByIdIn(categoryIds);
+            System.out.println("Found " + categories.size() + " categories in database");
+
             if (categories.size() != categoryIds.size()) {
+                System.out.println("ERROR: Some categories not found!");
+                System.out.println("Requested: " + categoryIds.size() + ", Found: " + categories.size());
                 throw new IllegalArgumentException("Some categories were not found");
             }
 
+            // Log each category being added
+            for (Category cat : categories) {
+                System.out.println("  - Category: " + cat.getName() + " (ID: " + cat.getId() + ")");
+            }
+
             // Clear existing categories and assign new ones
+            if (paper.getCategories() == null) {
+                paper.setCategories(new HashSet<>());
+            }
             paper.getCategories().clear();
             paper.getCategories().addAll(new HashSet<>(categories));
+            System.out.println("Categories added to paper object. New count: " + paper.getCategories().size());
         }
 
-        return paperRepository.save(paper);
+        Paper savedPaper = paperRepository.save(paper);
+        paperRepository.flush(); // Force immediate write to database
+        System.out.println("Paper saved and flushed to database");
+
+        // Verify save by re-fetching
+        Paper verifiedPaper = paperRepository.findByIdWithCategories(paperId).orElseThrow();
+        System.out.println("VERIFICATION: Re-fetched paper has " + verifiedPaper.getCategories().size() + " categories");
+
+        System.out.println("=== assignCategoriesToPaper END ===");
+        return savedPaper;
     }
 
     /**
      * NEW: Get categories for a paper
      */
+    @Transactional(readOnly = true) // Added readOnly transaction for data access
     public Set<Category> getPaperCategories(UUID paperId) {
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new ResourceNotFoundException("Paper not found with id: " + paperId));
@@ -188,6 +238,8 @@ public class PaperService {
 
     /**
      * NEW: Get recent papers (for explore system)
+     * NOTE: This implementation fetches all papers and sorts them in memory. 
+     * For large datasets, a Pageable-based repository method is strongly recommended (like findByOrderByUploadedAtDesc).
      */
     public List<Paper> getRecentPapers(int limit) {
         List<Paper> allPapers = paperRepository.findAll();
@@ -201,6 +253,8 @@ public class PaperService {
 
     /**
      * NEW: Search papers by keyword (basic search)
+     * NOTE: This implementation fetches all papers and filters them in memory.
+     * For better performance, the query should be pushed to the database (as done in PaperRepository's searchPapers).
      */
     public List<Paper> searchPapers(String query) {
         if (query == null || query.trim().isEmpty()) {
@@ -214,8 +268,8 @@ public class PaperService {
         return allPapers.stream()
                 .filter(paper ->
                         (paper.getTitle() != null && paper.getTitle().toLowerCase().contains(searchTerm)) ||
-                                (paper.getAuthor() != null && paper.getAuthor().toLowerCase().contains(searchTerm)) ||
-                                (paper.getAbstractText() != null && paper.getAbstractText().toLowerCase().contains(searchTerm))
+                        (paper.getAuthor() != null && paper.getAuthor().toLowerCase().contains(searchTerm)) ||
+                        (paper.getAbstractText() != null && paper.getAbstractText().toLowerCase().contains(searchTerm))
                 )
                 .toList();
     }
@@ -223,10 +277,11 @@ public class PaperService {
     /**
      * NEW: Check if user can edit paper (for authorization)
      */
+    @Transactional(readOnly = true)
     public boolean canUserEditPaper(UUID paperId, UUID userId) {
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new ResourceNotFoundException("Paper not found"));
-        
+
         // User can edit if they are the uploader
         return userId.equals(paper.getUploadedBy().getId());
     }
@@ -234,8 +289,8 @@ public class PaperService {
     /**
      * NEW: Get user's uploaded papers
      */
+    @Transactional(readOnly = true)
     public Page<Paper> getUserPapers(UUID userId, Pageable pageable) {
         return paperRepository.findByUploadedBy_IdOrderByUploadedAtDesc(userId, pageable);
     }
 }
-

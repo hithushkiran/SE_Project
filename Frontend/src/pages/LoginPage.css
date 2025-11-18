@@ -558,6 +558,8 @@
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   pointer-events: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-header {
@@ -593,14 +595,52 @@
   transition: all 0.2s ease;
 }
 
+
+.modal-form { 
+  padding: 18px; 
+  overflow-y: auto;
+  flex: 1;
+}
+/* Input styles moved to improved section below */
+
+.modal-primary {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+}
+
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr; gap: 32px; }
+  .hero-right { height: 360px; }
+  .hero-left h1 { font-size: 44px; }
+}
+
+@media (max-width: 640px) {
+  .navbar { margin: 8px 12px 0 12px; }
+  .hero { margin: 40px auto; }
+  .hero-left h1 { font-size: 36px; }
+}
+
+/* Add these to your existing LoginPage.css */
+
+/* Improved modal form styling */
+.modal-form {
+  padding: 18px;
+  overflow-y: auto;
+  max-height: calc(90vh - 120px);
+
 .modal-close:hover {
   background: rgba(239, 68, 68, 0.1);
   color: #ef4444;
 }
 
-.modal-form { 
-  padding: 24px; 
-}
+
 
 .input-row {
   display: flex;
@@ -655,6 +695,50 @@
 .modal-primary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* Category selection in modal */
+.category-selection {
+  margin-top: 0.5rem;
+}
+
+.category-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.category-chip {
+  padding: 8px 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 20px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #495057;
+  user-select: none;
+}
+
+.category-chip:hover {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+  transform: translateY(-2px);
+}
+
+.category-chip.selected {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border-color: #3b82f6;
+}
+
+.no-categories {
+  color: #6c757d;
+  font-style: italic;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
   transform: none;
 }
 
