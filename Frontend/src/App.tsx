@@ -89,19 +89,21 @@ const AppContent: React.FC = () => {
         />
 
         <Route 
-<<<<<<< HEAD
           path="/profile/:userId" 
           element={
             <ProtectedRoute>
               <UserProfilePage />
-=======
+              </ProtectedRoute>
+          }
+          />
+        <Route
           path="/summary" 
           element={
             <ProtectedRoute>
               <PDFSummarizer />
->>>>>>> dev_v2
             </ProtectedRoute>
-          } 
+          }
+           
         />
         
         <Route 

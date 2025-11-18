@@ -47,9 +47,7 @@ public interface PaperRepository extends JpaRepository<Paper, UUID> {
     Page<Paper> findByUploadedBy_IdOrderByUploadedAtDesc(UUID userId, Pageable pageable);
 
     long countByUploadedBy_Id(UUID userId);
-}
 
-    // Admin moderation
     Page<Paper> findByStatus(PaperStatus status, Pageable pageable);
     long countByStatus(PaperStatus status);
 
