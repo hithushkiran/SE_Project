@@ -26,6 +26,10 @@ public class PaperResponse {
     private Integer publicationYear;
     private String filePath;
     private Set<Category> categories;
+    private String abstractText;
+    private String status;
+    private String rejectionReason;
+    private LocalDateTime reviewedAt;
 
     public PaperResponse(UUID id, String title, String author, String abstractText,
                          LocalDateTime uploadedAt, Integer publicationYear,

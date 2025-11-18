@@ -3,7 +3,20 @@ import { LoginRequest, RegisterRequest, UpdateProfileRequest, UserResponse, Cate
 
 export const authService = {
   async login(credentials: LoginRequest): Promise<void> {
-    await api.post('auth/login', credentials);
+    // Debug: log payload and backend response on error to help diagnose 400s
+    // eslint-disable-next-line no-console
+    console.info('[auth] login payload', credentials);
+    try {
+      await api.post('/auth/login', credentials);
+    } catch (err: any) {
+      // eslint-disable-next-line no-console
+      console.error('[auth] login failed', {
+        status: err?.response?.status,
+        data: err?.response?.data,
+        headers: err?.response?.headers
+      }, err);
+      throw err;
+    }
   },
 
   async register(userData: RegisterRequest): Promise<void> {
@@ -15,8 +28,18 @@ export const authService = {
   },
 
   async getProfile(): Promise<UserResponse> {
-    const response = await api.get('auth/profile');
-    return response.data;
+    try {
+      const response = await api.get('/auth/profile');
+      return response.data;
+    } catch (err: any) {
+      // eslint-disable-next-line no-console
+      console.warn('[auth] getProfile failed', {
+        status: err?.response?.status,
+        data: err?.response?.data,
+        headers: err?.response?.headers
+      });
+      throw err;
+    }
   },
 
   async updateProfile(profileData: UpdateProfileRequest): Promise<void> {

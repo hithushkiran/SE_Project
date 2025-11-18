@@ -1,23 +1,66 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './LoginPage.css';
 
 const Logo = () => (
   <div className="brand">
-    <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
-      <path fill="#3b82f6" d="M9 2h6v2l-3 5 5 9c.3.54-.1 1.2-.73 1.2H7.73c-.63 0-1.03-.66-.73-1.2l5-9-3-5z"/>
-    </svg>
-    <span className="brand-text">Synthesis</span>
+    <span className="brand-text">𝘴𝘺𝘯𝘵𝘩𝘦𝘴𝘪𝘴</span>
   </div>
 );
 
-const Card = ({ title, position }: { title: string; position: string }) => (
-  <div className={`card card-${position}`}>
+const Card = ({ title, position, icon, description }: { title: string; position: string; icon: string; description: string }) => (
+  <div className={`card card-${position} card-${title.toLowerCase()}`}>
     <div className="card-tab">
-      <span className="tab-icon">{title === 'Fund' ? '🧪' : title === 'Earn' ? '🏅' : '📚'}</span>
+      <span className="tab-icon">{icon}</span>
       <span className="tab-text">{title}</span>
     </div>
-    <div className="card-body"></div>
+    <div className="card-body">
+      <div className="card-content">
+        {title !== 'Publish' && (
+          <p className="card-description">{description}</p>
+        )}
+        <div className="card-visual">
+          {title === 'Discover' && (
+            <div className="search-visual">
+              <div className="search-circle"></div>
+              <div className="search-handle"></div>
+            </div>
+          )}
+          {title === 'Collaborate' && (
+            <div className="collab-visual">
+              <div className="user-avatar"></div>
+              <div className="user-avatar"></div>
+              <div className="user-avatar"></div>
+            </div>
+          )}
+          {title === 'Publish' && (
+            <div className="publish-visual">
+              <div className="publish-gallery">
+                <img
+                  src="https://www.sciencedocs.com/wp-content/uploads/2017/01/close-up-sci-papers-500x374.gif"
+                  alt="Animated close-up of scientific notes"
+                  className="publish-image"
+                  loading="lazy"
+                />
+                <img
+                  src="https://media.istockphoto.com/id/474852858/photo/newspaper-with-the-headline-research-and-development.jpg?s=612x612&w=0&k=20&c=-lrvZQyw6bGiw_vkiOfg--viTcwYQS5BeRAx37B-e-4="
+                  alt="Research and development headline"
+                  className="publish-image"
+                  loading="lazy"
+                />
+                <img
+                  src="https://miro.medium.com/v2/resize:fit:1400/1*m_GKsrB2EfnLwwug3ASrtw.jpeg"
+                  alt="Researchers collaborating on data"
+                  className="publish-image"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   </div>
 );
 
@@ -121,7 +164,12 @@ const Modal: React.FC<ModalProps> = ({ mode, onClose }) => {
 };
 
 const LoginPage: React.FC = () => {
+  const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState<'login' | 'signup' | null>(null);
+
+  const handleAdminClick = () => {
+    navigate('/admin/login');
+  };
 
   return (
     <div className="page">
@@ -135,23 +183,103 @@ const LoginPage: React.FC = () => {
       
       <main className="hero">
         <section className="hero-left">
-          <h1>A new economy for science</h1>
-          <p>We're building a new model for scientific research where publishing and peer review lead to funding.</p>
-          <div className="cta-buttons">
-            <button className="primary-btn" onClick={() => setActiveModal('signup')}>Sign up</button>
-            <button className="secondary-btn" onClick={() => window.location.assign('/dashboard')}>Guest mode</button>
+          <div className="hero-badge">
+            <span className="badge-text">🔬 Advanced Research Platform</span>
           </div>
-          <p className="tagline">Start earning for open science today.</p>
+          <h1>Accelerate Scientific Discovery</h1>
+          <p>Join the future of research collaboration. Discover papers, share insights, and connect with researchers worldwide on our intelligent platform.</p>
+          <div className="hero-features">
+            <div className="feature-item">
+              <span className="feature-icon">🔍</span>
+              <span>AI-Powered Search</span>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">📊</span>
+              <span>Smart Analytics</span>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">🤝</span>
+              <span>Global Network</span>
+            </div>
+          </div>
+          <div className="cta-buttons">
+            <button className="primary-btn" onClick={() => setActiveModal('signup')}>
+              <span className="btn-icon">🚀</span>
+              Start Your Journey
+            </button>
+            <button className="secondary-btn" onClick={() => window.location.assign('/dashboard')}>
+              <span className="btn-icon">👁️</span>
+              Explore as Guest
+            </button>
+          </div>
+          <p className="tagline">Trusted by researchers from leading institutions worldwide</p>
         </section>
         
         <section className="hero-right">
           <div className="card-stack">
-            <Card title="Fund" position="back" />
-            <Card title="Earn" position="mid" />
-            <Card title="Publish" position="front" />
+            <Card 
+              title="Discover" 
+              position="back" 
+              icon="🔍" 
+              description="Search through millions of research papers with AI-powered filtering and recommendations"
+            />
+            <Card 
+              title="Collaborate" 
+              position="mid" 
+              icon="🤝" 
+              description="Connect with researchers, share insights, and work together on groundbreaking projects"
+            />
+            <Card 
+              title="Publish" 
+              position="front" 
+              icon="📄" 
+              description="Share your research with the global scientific community and gain recognition"
+            />
           </div>
         </section>
       </main>
+
+      <footer className="footer">
+        <div className="footer-content">
+          <div className="footer-section">
+            <h3 className="footer-title">ResearchHub</h3>
+            <p className="footer-description">Accelerating scientific discovery through intelligent collaboration</p>
+          </div>
+          
+          <div className="footer-section">
+            <h4 className="footer-heading">Platform</h4>
+            <ul className="footer-links">
+              <li><a href="#" className="footer-link">Discover Papers</a></li>
+              <li><a href="#" className="footer-link">Collaborate</a></li>
+              <li><a href="#" className="footer-link">Publish Research</a></li>
+            </ul>
+          </div>
+          
+          <div className="footer-section">
+            <h4 className="footer-heading">Support</h4>
+            <ul className="footer-links">
+              <li><a href="#" className="footer-link">Help Center</a></li>
+              <li><a href="#" className="footer-link">Contact Us</a></li>
+              <li><a href="#" className="footer-link">Privacy Policy</a></li>
+            </ul>
+          </div>
+          
+          <div className="footer-section">
+            <h4 className="footer-heading">System</h4>
+            <ul className="footer-links">
+              <li>
+                <a href="#" className="footer-link admin-link" onClick={handleAdminClick}>
+                  Admin
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div className="footer-bottom">
+          <p className="footer-copyright">© 2025 ResearchHub. All rights reserved.</p>
+        </div>
+      </footer>
 
       {activeModal && (
         <Modal mode={activeModal} onClose={() => setActiveModal(null)} />
