@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { BarChart3, Users, FileText, MessageSquareMore, BellRing, LogOut } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { adminService } from '../../services/adminService';
 import AdminDashboard from './AdminDashboard';
 import UserManagement from './UserManagement';
 import PaperModeration from './PaperModeration';
@@ -10,49 +13,83 @@ import './AdminPanel.css';
 type AdminTab = 'dashboard' | 'users' | 'papers' | 'comments' | 'notifications';
 
 const AdminPanel: React.FC = () => {
-  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { user, loading, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
   const [unreadCount, setUnreadCount] = useState(0);
 
-  // Check if user is admin
+  // Keep sidebar badge in sync with the unread count reported by dashboard stats
   useEffect(() => {
-    if (user && user.role !== 'ADMIN') {
-      // Redirect non-admin users to admin login
-      window.location.href = '/admin/login';
-    }
+    const fetchUnreadCount = async () => {
+      if (!user || user.role !== 'ADMIN') {
+        setUnreadCount(0);
+        return;
+      }
+
+      try {
+        const stats = await adminService.getDashboardStats();
+        setUnreadCount(stats?.unreadNotifications ?? 0);
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn('Failed to load unread notifications', err);
+        setUnreadCount(0);
+      }
+    };
+
+    fetchUnreadCount();
   }, [user]);
 
-  if (!user || user.role !== 'ADMIN') {
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login', { replace: true });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to logout', err);
+    }
+  };
+
+  if (loading) {
     return (
       <div className="admin-panel">
-      <div className="access-denied">
-        <h1>Access Denied</h1>
-        <p>You do not have permission to access the admin panel.</p>
-        <div className="access-denied-actions">
-          <button 
-            className="admin-login-redirect-btn"
-            onClick={() => window.location.href = '/admin/login'}
-          >
-            Go to Admin Login
-          </button>
-          <button 
-            className="back-to-site-btn"
-            onClick={() => window.location.href = '/'}
-          >
-            Back to Site
-          </button>
+        <div className="admin-loading">
+          <div className="loading-spinner">Loading admin dashboard...</div>
         </div>
-      </div>
       </div>
     );
   }
 
-  const tabs = [
-    { id: 'dashboard' as AdminTab, label: 'Dashboard', icon: '📊' },
-    { id: 'users' as AdminTab, label: 'Users', icon: '👥' },
-    { id: 'papers' as AdminTab, label: 'Papers', icon: '📄' },
-    { id: 'comments' as AdminTab, label: 'Comments', icon: '💬' },
-    { id: 'notifications' as AdminTab, label: 'Notifications', icon: '🔔' }
+  if (!user || user.role !== 'ADMIN') {
+    return (
+      <div className="admin-panel">
+        <div className="access-denied">
+          <h1>Access Denied</h1>
+          <p>You need an administrator account to access this area.</p>
+          <div className="access-denied-actions">
+            <button
+              className="admin-login-redirect-btn"
+              onClick={() => navigate('/login')}
+            >
+              Go to Login
+            </button>
+            <button
+              className="back-to-site-btn"
+              onClick={() => navigate('/dashboard')}
+            >
+              Back to Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const tabs: Array<{ id: AdminTab; label: string; icon: React.ComponentType<{ size?: number }> }> = [
+    { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+    { id: 'users', label: 'Users', icon: Users },
+    { id: 'papers', label: 'Papers', icon: FileText },
+    { id: 'comments', label: 'Comments', icon: MessageSquareMore },
+    { id: 'notifications', label: 'Notifications', icon: BellRing }
   ];
 
   const renderActiveTab = () => {
@@ -89,27 +126,33 @@ const AdminPanel: React.FC = () => {
         </div>
 
         <nav className="sidebar-nav">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              className={`nav-item ${activeTab === tab.id ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              <span className="nav-icon">{tab.icon}</span>
-              <span className="nav-label">{tab.label}</span>
-              {tab.id === 'notifications' && unreadCount > 0 && (
-                <span className="notification-badge">{unreadCount}</span>
-              )}
-            </button>
-          ))}
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                className={`nav-item ${activeTab === tab.id ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                <span className="nav-icon">
+                  <Icon size={20} />
+                </span>
+                <span className="nav-label">{tab.label}</span>
+                {tab.id === 'notifications' && unreadCount > 0 && (
+                  <span className="notification-badge">{unreadCount}</span>
+                )}
+              </button>
+            );
+          })}
         </nav>
 
         <div className="sidebar-footer">
-          <button 
+          <button
             className="logout-btn"
-            onClick={() => window.location.href = '/'}
+            onClick={handleLogout}
           >
-            ← Back to Site
+            <LogOut size={18} />
+            <span>Sign Out</span>
           </button>
         </div>
       </div>
@@ -134,3 +177,4 @@ const AdminPanel: React.FC = () => {
 };
 
 export default AdminPanel;
+

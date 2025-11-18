@@ -130,7 +130,7 @@
 
 .logout-btn {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   background: #34495e;
   color: #bdc3c7;
   border: none;
@@ -138,6 +138,10 @@
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .logout-btn:hover {
@@ -207,6 +211,15 @@
   flex: 1;
   background: #f8f9fa;
   overflow-y: auto;
+}
+
+.admin-loading {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 60vh;
 }
 
 .access-denied {

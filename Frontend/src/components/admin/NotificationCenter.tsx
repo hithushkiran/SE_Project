@@ -1,4 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+  FileText,
+  CheckCircle2,
+  XOctagon,
+  MessageCircleWarning,
+  BellRing,
+  UserRoundMinus,
+  UserRoundPlus,
+  Megaphone
+} from 'lucide-react';
 import { adminService, NotificationResponse } from '../../services/adminService';
 import './NotificationCenter.css';
 
@@ -11,6 +21,7 @@ const NotificationCenter: React.FC = () => {
 
   useEffect(() => {
     fetchNotifications();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   const fetchNotifications = async () => {
@@ -18,9 +29,11 @@ const NotificationCenter: React.FC = () => {
       setLoading(true);
       const response = await adminService.getNotifications(currentPage, 10);
       setNotifications(response);
-      // Note: The API should return pagination info, but for now we'll handle it simply
+      // TODO: update total pages when backend adds pagination metadata
+      setTotalPages(response.length === 10 ? currentPage + 2 : currentPage + 1);
     } catch (err) {
       setError('Failed to load notifications');
+      // eslint-disable-next-line no-console
       console.error('Error fetching notifications:', err);
     } finally {
       setLoading(false);
@@ -30,49 +43,47 @@ const NotificationCenter: React.FC = () => {
   const handleMarkAsRead = async (notificationId: string) => {
     try {
       await adminService.markNotificationAsRead(notificationId);
-      // Refresh notifications to update read status
       await fetchNotifications();
     } catch (err) {
       setError('Failed to mark notification as read');
+      // eslint-disable-next-line no-console
       console.error('Error marking notification as read:', err);
     }
   };
 
   const getNotificationIcon = (type: string) => {
-    const icons = {
-      'PAPER_SUBMITTED': '📄',
-      'PAPER_APPROVED': '✅',
-      'PAPER_REJECTED': '❌',
-      'COMMENT_REPORTED': '🚨',
-      'COMMENT_APPROVED': '✅',
-      'COMMENT_REJECTED': '❌',
-      'USER_REGISTERED': '👤',
-      'USER_SUSPENDED': '⏸️',
-      'USER_ACTIVATED': '▶️',
-      'SYSTEM_ANNOUNCEMENT': '📢'
+    const iconMap: Record<string, React.ReactNode> = {
+      PAPER_SUBMITTED: <FileText size={18} />,
+      PAPER_APPROVED: <CheckCircle2 size={18} />,
+      PAPER_REJECTED: <XOctagon size={18} />,
+      COMMENT_REPORTED: <MessageCircleWarning size={18} />,
+      COMMENT_APPROVED: <CheckCircle2 size={18} />,
+      COMMENT_REJECTED: <XOctagon size={18} />,
+      USER_REGISTERED: <UserRoundPlus size={18} />,
+      USER_SUSPENDED: <UserRoundMinus size={18} />,
+      USER_ACTIVATED: <UserRoundPlus size={18} />,
+      SYSTEM_ANNOUNCEMENT: <Megaphone size={18} />
     };
-    return icons[type as keyof typeof icons] || '🔔';
+    return iconMap[type] || <BellRing size={18} />;
   };
 
   const getNotificationColor = (type: string) => {
-    const colors = {
-      'PAPER_SUBMITTED': '#3498db',
-      'PAPER_APPROVED': '#28a745',
-      'PAPER_REJECTED': '#dc3545',
-      'COMMENT_REPORTED': '#ffc107',
-      'COMMENT_APPROVED': '#28a745',
-      'COMMENT_REJECTED': '#dc3545',
-      'USER_REGISTERED': '#17a2b8',
-      'USER_SUSPENDED': '#6c757d',
-      'USER_ACTIVATED': '#28a745',
-      'SYSTEM_ANNOUNCEMENT': '#6f42c1'
+    const colors: Record<string, string> = {
+      PAPER_SUBMITTED: '#3498db',
+      PAPER_APPROVED: '#28a745',
+      PAPER_REJECTED: '#dc3545',
+      COMMENT_REPORTED: '#ffc107',
+      COMMENT_APPROVED: '#28a745',
+      COMMENT_REJECTED: '#dc3545',
+      USER_REGISTERED: '#17a2b8',
+      USER_SUSPENDED: '#6c757d',
+      USER_ACTIVATED: '#28a745',
+      SYSTEM_ANNOUNCEMENT: '#6f42c1'
     };
-    return colors[type as keyof typeof colors] || '#6c757d';
+    return colors[type] || '#6c757d';
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString();
-  };
+  const formatDate = (dateString: string) => new Date(dateString).toLocaleString();
 
   const getRelativeTime = (dateString: string) => {
     const now = new Date();
@@ -99,7 +110,7 @@ const NotificationCenter: React.FC = () => {
       <div className="notification-header">
         <h1>Notification Center</h1>
         <div className="header-actions">
-          <button 
+          <button
             className="refresh-btn"
             onClick={fetchNotifications}
             disabled={loading}
@@ -115,21 +126,23 @@ const NotificationCenter: React.FC = () => {
 
       {notifications.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-icon">🔔</div>
+          <div className="empty-icon">
+            <BellRing size={40} />
+          </div>
           <h3>No Notifications</h3>
           <p>You're all caught up! No new notifications at the moment.</p>
         </div>
       ) : (
         <div className="notifications-list">
           {notifications.map((notification) => (
-            <div 
-              key={notification.id} 
+            <div
+              key={notification.id}
               className={`notification-item ${notification.isRead ? 'read' : 'unread'}`}
             >
               <div className="notification-icon">
                 {getNotificationIcon(notification.type)}
               </div>
-              
+
               <div className="notification-content">
                 <div className="notification-header">
                   <h3 className="notification-title">{notification.title}</h3>
@@ -142,25 +155,25 @@ const NotificationCenter: React.FC = () => {
                     )}
                   </div>
                 </div>
-                
+
                 <p className="notification-message">{notification.message}</p>
-                
+
                 <div className="notification-footer">
-                  <span 
+                  <span
                     className="notification-type"
                     style={{ color: getNotificationColor(notification.type) }}
                   >
                     {notification.type.replace(/_/g, ' ')}
                   </span>
-                  
+
                   {notification.relatedEntityId && (
                     <span className="related-entity">
                       Related: {notification.relatedEntityType} #{notification.relatedEntityId.substring(0, 8)}...
                     </span>
                   )}
-                  
+
                   {!notification.isRead && (
-                    <button 
+                    <button
                       className="mark-read-btn"
                       onClick={() => handleMarkAsRead(notification.id)}
                     >
@@ -176,7 +189,7 @@ const NotificationCenter: React.FC = () => {
 
       {totalPages > 1 && (
         <div className="pagination">
-          <button 
+          <button
             onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
             disabled={currentPage === 0}
             className="pagination-btn"
@@ -186,7 +199,7 @@ const NotificationCenter: React.FC = () => {
           <span className="pagination-info">
             Page {currentPage + 1} of {totalPages}
           </span>
-          <button 
+          <button
             onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
             disabled={currentPage >= totalPages - 1}
             className="pagination-btn"
@@ -200,3 +213,4 @@ const NotificationCenter: React.FC = () => {
 };
 
 export default NotificationCenter;
+

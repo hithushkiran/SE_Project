@@ -25,9 +25,14 @@ public class NotificationService {
     private UserRepository userRepository;
 
     @Transactional
-    public Notification createNotification(UUID userId, String title, String message, 
-                                         NotificationType type, UUID relatedEntityId, 
+    public Notification createNotification(UUID userId, String title, String message,
+                                         NotificationType type, UUID relatedEntityId,
                                          RelatedEntityType relatedEntityType) {
+        if (userId == null) {
+            // Skip notification if we can't resolve the user (e.g., legacy papers with no owner)
+            return null;
+        }
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 

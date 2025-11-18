@@ -1,12 +1,21 @@
-/* Container */
+/* Container - Handles the background and centering */
 .pdf-summarizer-container {
   min-height: 100vh;
   background: linear-gradient(to bottom right, #eff6ff, #e0e7ff);
-  padding: 2rem;
+  padding: 1rem; /* Base padding */
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  
+  /* Centering Magic */
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  box-sizing: border-box;
 }
 
+/* Wrapper - Controls max width and ensures full width on mobile */
 .pdf-summarizer-wrapper {
-  max-width: 56rem;
+  max-width: 56rem; /* Approx 900px */
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -15,28 +24,34 @@
   background: white;
   border-radius: 1rem;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  padding: 2rem;
+  padding: 2.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Header */
 .header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #f3f4f6;
 }
 
 .header-icon {
   width: 2.5rem;
   height: 2.5rem;
   color: #4f46e5;
+  flex-shrink: 0;
 }
 
 .header-title {
   font-size: 1.875rem;
-  font-weight: bold;
+  font-weight: 800;
   color: #1f2937;
   margin: 0;
+  line-height: 1.2;
 }
 
 /* Upload Section */
@@ -46,32 +61,43 @@
 
 .upload-label {
   display: block;
-  margin-bottom: 1rem;
+  width: 100%;
 }
 
 .upload-box {
   border: 2px dashed #a5b4fc;
   border-radius: 0.75rem;
-  padding: 2rem;
+  padding: 3rem 1.5rem; /* More vertical padding */
   text-align: center;
   cursor: pointer;
-  transition: border-color 0.3s;
+  transition: all 0.2s ease-in-out;
+  background-color: #fbfbfe;
 }
 
 .upload-box:hover {
-  border-color: #6366f1;
+  border-color: #4f46e5;
+  background-color: #f5f7ff;
+  transform: translateY(-1px);
+}
+
+.upload-box--active {
+  border-color: #4f46e5;
+  background-color: #eef2ff;
 }
 
 .upload-icon {
-  width: 3rem;
-  height: 3rem;
-  color: #a5b4fc;
+  width: 3.5rem;
+  height: 3.5rem;
+  color: #818cf8;
   margin: 0 auto 1rem;
+  display: block;
 }
 
 .upload-text {
-  color: #4b5563;
+  color: #374151;
+  font-weight: 500;
   margin-bottom: 0.5rem;
+  font-size: 1.125rem;
 }
 
 .upload-hint {
@@ -88,31 +114,38 @@
   width: 100%;
   background-color: #4f46e5;
   color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
   font-weight: 600;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s, transform 0.1s;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  font-size: 1rem;
+  gap: 0.75rem;
+  font-size: 1.125rem;
 }
 
 .generate-btn:hover:not(:disabled) {
   background-color: #4338ca;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+}
+
+.generate-btn:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .generate-btn:disabled {
-  background-color: #d1d5db;
+  background-color: #cbd5e1;
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .btn-icon {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .spin {
@@ -120,12 +153,8 @@
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* Error Message */
@@ -134,7 +163,7 @@
   padding: 1rem;
   background-color: #fef2f2;
   border: 1px solid #fecaca;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
@@ -145,27 +174,39 @@
   height: 1.25rem;
   color: #dc2626;
   margin-top: 0.125rem;
+  flex-shrink: 0;
 }
 
 .error-text {
-  color: #b91c1c;
+  color: #991b1b;
   margin: 0;
+  font-size: 0.95rem;
 }
 
 /* Summary Section */
 .summary-section {
-  background: linear-gradient(to bottom right, #eef2ff, #dbeafe);
+  background: linear-gradient(to bottom right, #f0fdf4, #dcfce7);
   border-radius: 0.75rem;
-  padding: 1.5rem;
-  border: 1px solid #e0e7ff;
+  padding: 2rem;
+  border: 1px solid #bbf7d0;
+  margin-top: 2rem;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .summary-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1f2937;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #166534;
   margin-bottom: 1rem;
   margin-top: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .summary-content {
@@ -173,32 +214,37 @@
 }
 
 .summary-text {
-  color: #374151;
+  color: #1f2937;
   line-height: 1.75;
   white-space: pre-wrap;
   margin: 0;
+  font-size: 1rem;
 }
 
 /* Footer */
 .footer {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   text-align: center;
   font-size: 0.875rem;
-  color: #4b5563;
-}
-
-.footer p {
-  margin: 0;
+  color: #6b7280;
+  font-weight: 500;
 }
 
 /* Responsive Design */
 @media (max-width: 640px) {
   .pdf-summarizer-container {
-    padding: 1rem;
+    padding: 0.5rem;
+    align-items: flex-start; /* Allow scrolling on very small heights */
   }
 
   .pdf-summarizer-card {
     padding: 1.5rem;
+    border-radius: 0.75rem;
+  }
+
+  .header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
   }
 
   .header-title {
@@ -206,6 +252,19 @@
   }
 
   .upload-box {
-    padding: 1.5rem;
+    padding: 2rem 1rem;
+  }
+
+  .upload-text {
+    font-size: 1rem;
+  }
+  
+  .generate-btn {
+    font-size: 1rem;
+    padding: 0.875rem;
+  }
+  
+  .summary-section {
+    padding: 1.25rem;
   }
 }

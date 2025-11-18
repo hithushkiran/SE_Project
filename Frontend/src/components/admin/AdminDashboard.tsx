@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Users, FileText, Clock3, MessageSquare, BellRing } from 'lucide-react';
 import { adminService, AdminDashboardStats } from '../../services/adminService';
 import './AdminDashboard.css';
 
@@ -15,6 +16,7 @@ const AdminDashboard: React.FC = () => {
         setStats(data);
       } catch (err) {
         setError('Failed to load dashboard statistics');
+        // eslint-disable-next-line no-console
         console.error('Error fetching dashboard stats:', err);
       } finally {
         setLoading(false);
@@ -49,46 +51,56 @@ const AdminDashboard: React.FC = () => {
 
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-icon users-icon">👥</div>
+          <div className="stat-icon users-icon">
+            <Users size={28} />
+          </div>
           <div className="stat-content">
             <h3>Total Users</h3>
-            <div className="stat-number">{stats?.totalUsers || 0}</div>
+            <div className="stat-number">{stats?.totalUsers ?? 0}</div>
           </div>
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon papers-icon">📄</div>
+          <div className="stat-icon papers-icon">
+            <FileText size={28} />
+          </div>
           <div className="stat-content">
             <h3>Total Papers</h3>
-            <div className="stat-number">{stats?.totalPapers || 0}</div>
+            <div className="stat-number">{stats?.totalPapers ?? 0}</div>
           </div>
         </div>
 
         <div className="stat-card pending">
-          <div className="stat-icon pending-icon">⏳</div>
+          <div className="stat-icon pending-icon">
+            <Clock3 size={28} />
+          </div>
           <div className="stat-content">
             <h3>Pending Papers</h3>
-            <div className="stat-number">{stats?.pendingPapers || 0}</div>
-            {stats?.pendingPapers > 0 && (
+            <div className="stat-number">{stats?.pendingPapers ?? 0}</div>
+            {(stats?.pendingPapers ?? 0) > 0 && (
               <div className="stat-alert">Requires attention</div>
             )}
           </div>
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon comments-icon">💬</div>
+          <div className="stat-icon comments-icon">
+            <MessageSquare size={28} />
+          </div>
           <div className="stat-content">
             <h3>Total Comments</h3>
-            <div className="stat-number">{stats?.totalComments || 0}</div>
+            <div className="stat-number">{stats?.totalComments ?? 0}</div>
           </div>
         </div>
 
         <div className="stat-card notifications">
-          <div className="stat-icon notifications-icon">🔔</div>
+          <div className="stat-icon notifications-icon">
+            <BellRing size={28} />
+          </div>
           <div className="stat-content">
             <h3>Unread Notifications</h3>
-            <div className="stat-number">{stats?.unreadNotifications || 0}</div>
-            {stats?.unreadNotifications > 0 && (
+            <div className="stat-number">{stats?.unreadNotifications ?? 0}</div>
+            {(stats?.unreadNotifications ?? 0) > 0 && (
               <div className="stat-alert">New notifications</div>
             )}
           </div>
@@ -117,3 +129,4 @@ const AdminDashboard: React.FC = () => {
 };
 
 export default AdminDashboard;
+
