@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByEmail(String email);
     
-    @Query("SELECT u FROM User u LEFT JOIN FETCH u.library WHERE u.id = :userId")
+    @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.library l LEFT JOIN FETCH l.categories WHERE u.id = :userId")
     Optional<User> findByIdWithLibrary(@Param("userId") UUID userId);
 }
 

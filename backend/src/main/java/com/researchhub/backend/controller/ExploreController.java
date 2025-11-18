@@ -70,6 +70,22 @@ public class ExploreController {
         }
     }
 
+    @GetMapping("/trending")
+    public ResponseEntity<ApiResponse<Page<PaperResponse>>> getTrendingPapers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        try {
+            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "viewCount"));
+            Page<Paper> papers = paperSearchService.getTrendingPapers(pageable);
+            Page<PaperResponse> response = paperResponseService.toPaperResponse(papers);
+            return ResponseEntity.ok(ApiResponse.success(response));
+        } catch (Exception e) {
+            logger.error("Error fetching trending papers", e);
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Failed to fetch trending papers: " + e.getMessage()));
+        }
+    }
+
     private UUID getUserIdFromAuthentication(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return null; // Return null for public access

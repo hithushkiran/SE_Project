@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { PaperResponse } from '../types/explore';
 import { api } from '../services/api';
 
@@ -9,12 +9,12 @@ interface UsePaperResult {
   refetch: () => void;
 }
 
-export const usePaper = (id: string | undefined): UsePaperResult => {
-  const [paper, setPaper] = useState<PaperResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+export const usePaper = (id: string | undefined, initialPaper?: PaperResponse): UsePaperResult => {
+  const [paper, setPaper] = useState<PaperResponse | null>(initialPaper ?? null);
+  const [loading, setLoading] = useState(!initialPaper);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchPaper = async () => {
+  const fetchPaper = useCallback(async () => {
     if (!id) {
       setError('Paper ID is required');
       setLoading(false);
@@ -41,11 +41,24 @@ export const usePaper = (id: string | undefined): UsePaperResult => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
+    if (!id) {
+      setError('Paper ID is required');
+      setLoading(false);
+      return;
+    }
+
+    if (initialPaper && initialPaper.id === id) {
+      setPaper(initialPaper);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
     fetchPaper();
-  }, [id]);
+  }, [id, initialPaper, fetchPaper]);
 
   return {
     paper,

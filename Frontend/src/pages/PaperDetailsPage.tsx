@@ -1,13 +1,17 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { usePaper } from '../hooks/usePaper';
 import PaperDetailsCard from '../components/PaperDetailsCard';
 import './PaperDetailsPage.css';
+import { PaperResponse } from '../types/explore';
 
 const PaperDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { paper, loading, error } = usePaper(id);
+  const location = useLocation();
+  const locationState = location.state as { paper?: PaperResponse } | null;
+  const initialPaper = locationState?.paper;
+  const { paper, loading, error } = usePaper(id, initialPaper);
 
   const handleBack = () => {
     navigate(-1);

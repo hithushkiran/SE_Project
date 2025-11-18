@@ -100,6 +100,7 @@ public class PaperService {
 
     // ===== NEW METHODS NEEDED FOR CONTROLLER =====
 
+    @Transactional
     public Paper getPaperById(UUID id) {
         return paperRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Paper not found with id: " + id));
@@ -223,9 +224,22 @@ public class PaperService {
     public Paper incrementViewCount(UUID paperId) {
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new ResourceNotFoundException("Paper not found with id: " + paperId));
-        
-        paper.setViewCount(paper.getViewCount() + 1);
+        return incrementViewCountInternal(paper);
+    }
+
+    @Transactional
+    public Paper getPaperByIdWithViewIncrement(UUID id) {
+        Paper paper = paperRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Paper not found with id: " + id));
+        return incrementViewCountInternal(paper);
+    }
+
+    private Paper incrementViewCountInternal(Paper paper) {
+        Long currentCount = paper.getViewCount();
+        if (currentCount == null) {
+            currentCount = 0L;
+        }
+        paper.setViewCount(currentCount + 1);
         return paperRepository.save(paper);
     }
 }
-

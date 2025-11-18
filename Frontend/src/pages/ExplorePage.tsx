@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/explore/SearchBar';
 import FilterSidebar from '../components/explore/FilterSidebar';
@@ -15,6 +15,8 @@ interface ExploreFilters {
   author: string;
 }
 
+type ExploreTab = 'recommended' | 'trending' | 'search';
+
 const ExplorePage: React.FC = () => {
   const navigate = useNavigate();
   const [filters, setFilters] = useState<ExploreFilters>({
@@ -25,6 +27,8 @@ const ExplorePage: React.FC = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [categories, setCategories] = useState<CategoryResponse[]>([]);
+  const [activeTab, setActiveTab] = useState<ExploreTab>('recommended');
+  const skipFilterEffectRef = useRef(false);
 
   const {
     papers,
@@ -33,6 +37,7 @@ const ExplorePage: React.FC = () => {
     hasMore,
     loadMore,
     searchPapers,
+    loadTrendingPapers,
     resetSearch
   } = useExplore();
 
@@ -55,14 +60,29 @@ const ExplorePage: React.FC = () => {
 
   // Search papers when filters change
   useEffect(() => {
+    if (skipFilterEffectRef.current) {
+      skipFilterEffectRef.current = false;
+      return;
+    }
+
+    if (activeTab === 'trending') {
+      return;
+    }
+
     const hasActiveFilters = filters.query || filters.categories.length > 0 || filters.year || filters.author;
     
     if (hasActiveFilters) {
+      if (activeTab !== 'search') {
+        setActiveTab('search');
+      }
       searchPapers(filters);
     } else {
+      if (activeTab !== 'recommended') {
+        setActiveTab('recommended');
+      }
       resetSearch();
     }
-  }, [filters, searchPapers, resetSearch]);
+  }, [filters, activeTab, searchPapers, resetSearch]);
 
   const handleSearch = (query: string) => {
     setFilters(prev => ({ ...prev, query }));
@@ -73,6 +93,7 @@ const ExplorePage: React.FC = () => {
   };
 
   const handleClearFilters = () => {
+    setActiveTab('recommended');
     setFilters({
       query: '',
       categories: [],
@@ -81,9 +102,34 @@ const ExplorePage: React.FC = () => {
     });
   };
 
+  const handleTabChange = (tab: ExploreTab) => {
+    if (tab === 'trending') {
+      setActiveTab('trending');
+      void loadTrendingPapers();
+      return;
+    }
+
+    if (tab === 'recommended') {
+      const hasActiveFilters = filters.query || filters.categories.length > 0 || filters.year || filters.author;
+      if (hasActiveFilters) {
+        handleClearFilters();
+        return;
+      }
+      skipFilterEffectRef.current = true;
+      setActiveTab('recommended');
+      resetSearch();
+    }
+  };
+
   const handleBackToDashboard = () => {
     navigate('/dashboard');
   };
+
+  const gridTitle = activeTab === 'trending'
+    ? 'Trending Papers'
+    : activeTab === 'search'
+      ? 'Search Results'
+      : 'Recommended for You';
 
   return (
     <div className="explore-page">
@@ -106,6 +152,20 @@ const ExplorePage: React.FC = () => {
             onChange={handleSearch}
             placeholder="Search papers, authors, or topics..."
           />
+          <div className="explore-tabs">
+            <button
+              className={`explore-tab ${activeTab === 'recommended' ? 'active' : ''}`}
+              onClick={() => handleTabChange('recommended')}
+            >
+              Recommended
+            </button>
+            <button
+              className={`explore-tab ${activeTab === 'trending' ? 'active' : ''}`}
+              onClick={() => handleTabChange('trending')}
+            >
+              Trending
+            </button>
+          </div>
           <button
             className={`filter-toggle ${showFilters ? 'active' : ''}`}
             onClick={() => setShowFilters(!showFilters)}
@@ -133,7 +193,8 @@ const ExplorePage: React.FC = () => {
               error={error}
               hasMore={hasMore}
               onLoadMore={loadMore}
-              isSearching={filters.query !== '' || filters.categories.length > 0 || filters.year !== null || filters.author !== ''}
+              isSearching={activeTab === 'search'}
+              title={gridTitle}
             />
           </div>
         </div>

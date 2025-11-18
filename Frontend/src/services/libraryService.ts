@@ -1,18 +1,29 @@
 import { api } from './api';
+import { ApiResponse, PaperResponse } from '../types/explore';
+
+type LibraryActionResponse = ApiResponse<null>;
+
+const normalizeLibraryList = (data: unknown): PaperResponse[] => {
+  if (!Array.isArray(data)) {
+    return [];
+  }
+  return data as PaperResponse[];
+};
 
 export const libraryService = {
-  async addToLibrary(paperId: string, userId: string): Promise<void> {
-    await api.post(`/library/add/${paperId}?userId=${encodeURIComponent(userId)}`);
+  async addToLibrary(paperId: string): Promise<LibraryActionResponse> {
+    const response = await api.post<LibraryActionResponse>(`/library/add/${paperId}`);
+    return response.data;
   },
 
-  async removeFromLibrary(paperId: string, userId: string): Promise<void> {
-    await api.delete(`/library/remove/${paperId}?userId=${encodeURIComponent(userId)}`);
+  async removeFromLibrary(paperId: string): Promise<LibraryActionResponse> {
+    const response = await api.delete<LibraryActionResponse>(`/library/remove/${paperId}`);
+    return response.data;
   },
 
-  async getUserLibrary(userId: string): Promise<import('../types/explore').PaperResponse[]> {
-    const response = await api.get(`/users/${userId}/library`);
-    // Assume standard API shape { success, data }
-    return response.data?.data ?? response.data;
+  async getUserLibrary(userId: string): Promise<PaperResponse[]> {
+    const response = await api.get<ApiResponse<PaperResponse[]>>(`/users/${userId}/library`);
+    return normalizeLibraryList(response.data?.data ?? response.data);
   },
 };
 

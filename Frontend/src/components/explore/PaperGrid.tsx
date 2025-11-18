@@ -10,6 +10,7 @@ interface PaperGridProps {
   hasMore: boolean;
   onLoadMore: () => void;
   isSearching: boolean;
+  title?: string;
 }
 
 const PaperGrid: React.FC<PaperGridProps> = ({
@@ -18,9 +19,11 @@ const PaperGrid: React.FC<PaperGridProps> = ({
   error,
   hasMore,
   onLoadMore,
-  isSearching
+  isSearching,
+  title
 }) => {
   const [papersWithViewCounts, setPapersWithViewCounts] = useState<PaperResponse[]>(papers);
+  const headerTitle = title ?? (isSearching ? 'Search Results' : 'Recommended for You');
 
   // Update local papers when props change
   React.useEffect(() => {
@@ -87,7 +90,7 @@ const PaperGrid: React.FC<PaperGridProps> = ({
     <div className="paper-grid">
       <div className="paper-grid-header">
         <h2>
-          {isSearching ? 'Search Results' : 'Recommended for You'}
+          {headerTitle}
         </h2>
         <span className="paper-count">
           {papersWithViewCounts.length} paper{papersWithViewCounts.length !== 1 ? 's' : ''}

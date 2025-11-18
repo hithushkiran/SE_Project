@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { LibraryProvider } from './contexts/LibraryContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
@@ -134,7 +135,9 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <AuthProvider>
-      <AppContent />
+      <LibraryProvider>
+        <AppContent />
+      </LibraryProvider>
     </AuthProvider>
   );
 }

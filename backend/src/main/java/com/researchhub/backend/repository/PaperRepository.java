@@ -41,6 +41,8 @@ public interface PaperRepository extends JpaRepository<Paper, UUID> {
 
     // Find papers by author
     List<Paper> findByAuthorContainingIgnoreCase(String author);
+
+    Page<Paper> findAllByOrderByViewCountDesc(Pageable pageable);
 }
 
 

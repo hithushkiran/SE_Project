@@ -1,13 +1,13 @@
 package com.researchhub.backend.controller;
 
 import com.researchhub.backend.dto.ApiResponse;
+import com.researchhub.backend.dto.PaperResponse;
 import com.researchhub.backend.exception.ResourceNotFoundException;
-import com.researchhub.backend.model.Paper;
 import com.researchhub.backend.service.LibraryService;
-import com.researchhub.backend.service.PaperResponseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,16 +23,29 @@ public class LibraryController {
     @Autowired
     private LibraryService libraryService;
 
-    @Autowired
-    private PaperResponseService paperResponseService;
-
     @PostMapping("/library/add/{paperId}")
-    public ResponseEntity<ApiResponse<Void>> addToLibrary(@RequestParam("userId") UUID userId,
-                                                         @PathVariable("paperId") UUID paperId) {
+    public ResponseEntity<ApiResponse<Void>> addToLibrary(
+            @RequestParam(value = "userId", required = false) UUID userId,
+            @PathVariable("paperId") UUID paperId,
+            org.springframework.security.core.Authentication authentication) {
         try {
-            logger.info("Adding paper {} to library for user {}", paperId, userId);
-            libraryService.addToLibrary(userId, paperId);
-            return ResponseEntity.ok(ApiResponse.success("Paper added to library successfully", null));
+            UUID resolvedUserId = resolveUserId(userId, authentication);
+            if (resolvedUserId == null) {
+                logger.warn("Attempt to add paper {} to library without authenticated user context", paperId);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(ApiResponse.error("User not authenticated"));
+            }
+
+            logger.info("Adding paper {} to library for user {}", paperId, resolvedUserId);
+            boolean added = libraryService.addToLibrary(resolvedUserId, paperId);
+            if (added) {
+                logger.info("Library add created entry for user {} paper {}", resolvedUserId, paperId);
+                return ResponseEntity.status(HttpStatus.CREATED)
+                        .body(ApiResponse.success("Paper added to library successfully", null));
+            }
+            logger.debug("Paper {} already present in library for user {}", paperId, resolvedUserId);
+            logger.info("Library add skipped existing entry for user {} paper {}", resolvedUserId, paperId);
+            return ResponseEntity.ok(ApiResponse.success("Paper already in library", null));
         } catch (ResourceNotFoundException e) {
             logger.error("Resource not found when adding to library: {}", e.getMessage());
             return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
@@ -43,11 +56,21 @@ public class LibraryController {
     }
 
     @DeleteMapping("/library/remove/{paperId}")
-    public ResponseEntity<ApiResponse<Void>> removeFromLibrary(@RequestParam("userId") UUID userId,
-                                                              @PathVariable("paperId") UUID paperId) {
+    public ResponseEntity<ApiResponse<Void>> removeFromLibrary(
+            @RequestParam(value = "userId", required = false) UUID userId,
+            @PathVariable("paperId") UUID paperId,
+            org.springframework.security.core.Authentication authentication) {
         try {
-            logger.info("Removing paper {} from library for user {}", paperId, userId);
-            libraryService.removeFromLibrary(userId, paperId);
+            UUID resolvedUserId = resolveUserId(userId, authentication);
+            if (resolvedUserId == null) {
+                logger.warn("Attempt to remove paper {} from library without authenticated user context", paperId);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(ApiResponse.error("User not authenticated"));
+            }
+
+            logger.info("Removing paper {} from library for user {}", paperId, resolvedUserId);
+            libraryService.removeFromLibrary(resolvedUserId, paperId);
+            logger.info("Library remove completed for user {} paper {}", resolvedUserId, paperId);
             return ResponseEntity.ok(ApiResponse.success("Paper removed from library successfully", null));
         } catch (ResourceNotFoundException e) {
             logger.error("Resource not found when removing from library: {}", e.getMessage());
@@ -59,7 +82,7 @@ public class LibraryController {
     }
 
     @GetMapping("/users/{id}/library")
-    public ResponseEntity<ApiResponse<List<?>>> getUserLibrary(@PathVariable("id") String userId) {
+    public ResponseEntity<ApiResponse<List<PaperResponse>>> getUserLibrary(@PathVariable("id") String userId) {
         try {
             logger.info("Getting library for user: {}", userId);
             
@@ -72,15 +95,9 @@ public class LibraryController {
                 return ResponseEntity.badRequest().body(ApiResponse.error("Invalid user ID format"));
             }
             
-            List<Paper> papers = libraryService.getUserLibrary(userIdUuid);
-            
-            // Convert to PaperResponse for consistent API format
-            List<?> responseData = papers.stream()
-                    .map(paperResponseService::toPaperResponse)
-                    .toList();
-            
-            logger.info("Found {} papers in library for user {}", responseData.size(), userId);
-            return ResponseEntity.ok(ApiResponse.success(responseData));
+            List<PaperResponse> papers = libraryService.getUserLibrary(userIdUuid);
+            logger.info("Found {} papers in library for user {}", papers.size(), userId);
+            return ResponseEntity.ok(ApiResponse.success(papers));
             
         } catch (ResourceNotFoundException e) {
             logger.error("User not found: {}", userId);
@@ -89,6 +106,32 @@ public class LibraryController {
             logger.error("Error getting user library: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().body(ApiResponse.error("Failed to load library"));
         }
+    }
+
+    private UUID resolveUserId(UUID requestedUserId, org.springframework.security.core.Authentication authentication) {
+        if (requestedUserId != null) {
+            if (authentication != null && authentication.isAuthenticated()) {
+                try {
+                    UUID authenticatedId = UUID.fromString(authentication.getName());
+                    if (!requestedUserId.equals(authenticatedId)) {
+                        logger.warn("User ID in request ({}) does not match authenticated user ({})", requestedUserId, authenticatedId);
+                        return null;
+                    }
+                } catch (IllegalArgumentException ex) {
+                    logger.warn("Authentication principal [{}] is not a valid UUID", authentication.getName());
+                    return null;
+                }
+            }
+            return requestedUserId;
+        }
+        if (authentication != null && authentication.isAuthenticated()) {
+            try {
+                return UUID.fromString(authentication.getName());
+            } catch (IllegalArgumentException ex) {
+                logger.warn("Authentication principal [{}] is not a valid UUID", authentication.getName());
+            }
+        }
+        return null;
     }
 }
 
