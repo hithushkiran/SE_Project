@@ -3,6 +3,7 @@ package com.researchhub.backend.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -17,6 +18,7 @@ public class UserResponse {
     private String avatarUrl;
     private boolean emailVerified;
     private String role;
+    private LocalDateTime createdAt;
 
     public UserResponse(UUID id, String email, String fullName) {
         this.id = id;

@@ -1,0 +1,14 @@
+package com.researchhub.backend.model;
+
+public enum NotificationType {
+    PAPER_SUBMITTED,
+    PAPER_APPROVED,
+    PAPER_REJECTED,
+    COMMENT_REPORTED,
+    COMMENT_APPROVED,
+    COMMENT_REJECTED,
+    USER_REGISTERED,
+    USER_SUSPENDED,
+    USER_ACTIVATED,
+    SYSTEM_ANNOUNCEMENT
+}

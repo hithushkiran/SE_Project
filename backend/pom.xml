@@ -74,8 +74,8 @@
 			<artifactId>lombok</artifactId>
 			<version>1.18.34</version>
 			<optional>true</optional>
+			<scope>provided</scope>
 		</dependency>
-
 
 		<!-- Testing -->
 		<dependency>
@@ -90,6 +90,23 @@
 		</dependency>
 
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>central</id>
+			<name>Maven Central</name>
+			<url>https://repo1.maven.org/maven2</url>
+		</repository>
+		<repository>
+			<id>jboss</id>
+			<url>https://repository.jboss.org/nexus/content/repositories/public/</url>
+		</repository>
+		<repository>
+			<id>aliyunmaven</id>
+			<name>Aliyun Maven</name>
+			<url>https://maven.aliyun.com/repository/public</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
