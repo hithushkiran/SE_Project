@@ -56,5 +56,6 @@ public interface PaperRepository extends JpaRepository<Paper, UUID> {
     Page<Paper> findByStatus(PaperStatus status, Pageable pageable);
     long countByStatus(PaperStatus status);
 
-    // The conflicting line has been removed.
+    // find by author
+    List<Paper> findByAuthor(String authorId);
 }
