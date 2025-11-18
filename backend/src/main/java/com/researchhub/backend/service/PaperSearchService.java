@@ -1,6 +1,7 @@
 package com.researchhub.backend.service;
 
 import com.researchhub.backend.dto.PaperSearchRequest;
+import com.researchhub.backend.model.Category;
 import com.researchhub.backend.model.Paper;
 import com.researchhub.backend.model.Profile;
 import com.researchhub.backend.repository.PaperRepository;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -43,19 +45,28 @@ public class PaperSearchService {
     public Page<Paper> getRecommendedPapers(UUID userId, Pageable pageable) {
         logger.info("Getting recommended papers for user: {}", userId);
 
-        // Get user's profile with interests
-        Profile profile = profileRepository.findByUserIdWithInterests(userId)
-                .orElseThrow(() -> new RuntimeException("Profile not found for user: " + userId));
+        try {
+            // Get user's profile with interests
+            Profile profile = profileRepository.findByUserIdWithInterests(userId)
+                    .orElse(null);
 
-        // If user has interests, recommend papers from those categories
-        if (profile.getInterests() != null && !profile.getInterests().isEmpty()) {
-            List<UUID> interestIds = profile.getInterests().stream()
+            // If profile not found or user has no interests, return recent papers
+            Set<Category> interests = (profile != null) ? profile.getInterests() : null;
+            if (interests == null || interests.isEmpty()) {
+                logger.info("No profile or interests found for user {}, returning recent papers", userId);
+                return paperRepository.findByOrderByUploadedAtDesc(pageable);
+            }
+
+            // Create a defensive copy to avoid ConcurrentModificationException
+            List<UUID> interestIds = new java.util.ArrayList<>(interests).stream()
                     .map(category -> category.getId())
                     .collect(Collectors.toList());
 
+            logger.info("Found {} interests for user {}", interestIds.size(), userId);
             return paperRepository.findByCategoryIds(interestIds, pageable);
-        } else {
-            // Fallback: return recent papers if no interests set
+        } catch (Exception e) {
+            logger.error("Error getting recommended papers for user {}: {}", userId, e.getMessage(), e);
+            // Fallback: return recent papers on any error
             return paperRepository.findByOrderByUploadedAtDesc(pageable);
         }
     }

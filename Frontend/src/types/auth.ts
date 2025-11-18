@@ -16,6 +16,13 @@ export interface UpdateProfileRequest {
   bio?: string;
   website?: string;
   avatarUrl?: string;
+  categoryIds?: string[];
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  description?: string;
 }
 
 export interface UserResponse {
@@ -27,5 +34,6 @@ export interface UserResponse {
   website?: string;
   avatarUrl?: string;
   emailVerified: boolean;
-  role: string;
+  role: 'USER' | 'RESEARCHER' | 'ADMIN';
+  createdAt?: string;
 }

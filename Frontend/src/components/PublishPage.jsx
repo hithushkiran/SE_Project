@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { multipartApi } from '../api/axios';
+import { categoryService } from '../services/categoryService';
 import './PublishPage.css';
 
 const PublishPage = () => {
@@ -11,15 +12,18 @@ const PublishPage = () => {
     title: '',
     author: '',
     date: '',
-    file: null
+    file: null,
+    categoryIds: [],
+    abstractText: ''
   });
+  const [categories, setCategories] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [uploadedPaper, setUploadedPaper] = useState(null);
   const [error, setError] = useState('');
 
-  // Generate UUID and set today's date on component mount
+  // Generate UUID, set today's date, and fetch categories on component mount
   useEffect(() => {
     const generateUUID = () => {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -36,6 +40,18 @@ const PublishPage = () => {
       id: generateUUID(),
       date: today
     }));
+
+    // Fetch categories
+    const fetchCategories = async () => {
+      try {
+        const categoriesData = await categoryService.getAllCategories();
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error('Failed to fetch categories:', error);
+      }
+    };
+
+    fetchCategories();
   }, []);
 
   const handleInputChange = (e) => {
@@ -59,6 +75,15 @@ const PublishPage = () => {
     }
   };
 
+  const handleCategoryToggle = (categoryId) => {
+    setFormData(prev => {
+      const categoryIds = prev.categoryIds.includes(categoryId)
+        ? prev.categoryIds.filter(id => id !== categoryId)
+        : [...prev.categoryIds, categoryId];
+      return { ...prev, categoryIds };
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -77,6 +102,11 @@ const PublishPage = () => {
     setError('');
 
     try {
+      console.log('=== UPLOAD DEBUG ===');
+      console.log('formData.categoryIds:', formData.categoryIds);
+      console.log('Is array?', Array.isArray(formData.categoryIds));
+      console.log('Length:', formData.categoryIds?.length);
+      
       const uploadData = new FormData();
       uploadData.append('file', formData.file);
       uploadData.append('title', formData.title);
@@ -86,7 +116,29 @@ const PublishPage = () => {
         uploadData.append('bookId', formData.bookId);
       }
 
-      const response = await multipartApi.post('/api/papers/upload', uploadData, {
+      // Add abstract text if provided
+      if (formData.abstractText && formData.abstractText.trim()) {
+        uploadData.append('abstractText', formData.abstractText.trim());
+      }
+
+      // Add category IDs if any are selected
+      const hasCategoryIds = formData.categoryIds && formData.categoryIds.length > 0;
+      console.log('Has category IDs:', hasCategoryIds);
+      
+      if (hasCategoryIds) {
+        formData.categoryIds.forEach(id => {
+          console.log('Appending category ID:', id);
+          uploadData.append('categoryIds', id);
+        });
+      }
+
+      const endpoint = hasCategoryIds
+        ? '/papers/upload-with-categories' 
+        : '/papers/upload';
+      
+      console.log('Using endpoint:', endpoint);
+
+      const response = await multipartApi.post(endpoint, uploadData, {
         onUploadProgress: (progressEvent) => {
           const progress = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
@@ -211,6 +263,20 @@ const PublishPage = () => {
           </div>
 
           <div className="form-group">
+            <label htmlFor="abstractText">Abstract / Description:</label>
+            <textarea
+              id="abstractText"
+              name="abstractText"
+              value={formData.abstractText}
+              onChange={handleInputChange}
+              placeholder="Enter a brief description or abstract of your research paper (optional)"
+              rows="6"
+              className="abstract-textarea"
+            />
+            <small>Provide a summary of your research (200-500 words recommended)</small>
+          </div>
+
+          <div className="form-group">
             <label htmlFor="date">Date:</label>
             <input
               type="date"
@@ -234,6 +300,28 @@ const PublishPage = () => {
               required
             />
             <small>Only PDF files are accepted</small>
+          </div>
+
+          <div className="form-group">
+            <label>Categories:</label>
+            <div className="category-selection">
+              {categories.length === 0 ? (
+                <p className="no-categories">Loading categories...</p>
+              ) : (
+                <div className="category-chips">
+                  {categories.map(category => (
+                    <div
+                      key={category.id}
+                      className={`category-chip ${formData.categoryIds.includes(category.id) ? 'selected' : ''}`}
+                      onClick={() => handleCategoryToggle(category.id)}
+                    >
+                      {category.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <small>Select one or more categories for your paper (optional)</small>
           </div>
 
           {error && (

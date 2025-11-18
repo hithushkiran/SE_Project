@@ -42,6 +42,20 @@ public class Paper {
     @Column(name = "abstract_text", columnDefinition = "TEXT")
     private String abstractText;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private PaperStatus status = PaperStatus.PENDING;
+
+    @Column(name = "rejection_reason", columnDefinition = "TEXT")
+    private String rejectionReason;
+
+    @Column(name = "reviewed_at")
+    private LocalDateTime reviewedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewed_by")
+    private User reviewedBy;
+
     // Users that saved this paper in their libraries
     @ManyToMany(mappedBy = "library")
     @JsonIgnore
@@ -49,13 +63,12 @@ public class Paper {
 
 
     // Categories associated with this paper
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "paper_categories",
             joinColumns = @JoinColumn(name = "paper_id", columnDefinition = "BINARY(16)"),
             inverseJoinColumns = @JoinColumn(name = "category_id", columnDefinition = "BINARY(16)")
     )
-    @JsonIgnore
     private Set<Category> categories = new HashSet<>();
 
     // Comments on this paper

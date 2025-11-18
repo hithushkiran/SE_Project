@@ -1,6 +1,7 @@
 package com.researchhub.backend.repository;
 
 import com.researchhub.backend.model.Paper;
+import com.researchhub.backend.model.PaperStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -39,8 +40,16 @@ public interface PaperRepository extends JpaRepository<Paper, UUID> {
     // Find recent papers (fallback for new users)
     Page<Paper> findByOrderByUploadedAtDesc(Pageable pageable);
 
-    // Find papers by author
+    // Find papers by author name (case-insensitive)
     List<Paper> findByAuthorContainingIgnoreCase(String author);
+
+    // Find paper by ID with categories eagerly loaded
+    @Query("SELECT p FROM Paper p LEFT JOIN FETCH p.categories WHERE p.id = :id")
+    java.util.Optional<Paper> findByIdWithCategories(@Param("id") UUID id);
+    // Admin moderation
+    Page<Paper> findByStatus(PaperStatus status, Pageable pageable);
+    long countByStatus(PaperStatus status);
+
+    // Changed method: now author is a String
+    List<Paper> findByAuthor(String authorId);
 }
-
-
