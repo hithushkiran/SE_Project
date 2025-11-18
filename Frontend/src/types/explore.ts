@@ -4,6 +4,12 @@ export interface CategoryResponse {
   description: string;
 }
 
+export interface AuthorInfo {
+  id: string;
+  name: string | null;
+  maskedEmail: string | null;
+}
+
 export interface PaperResponse {
   id: string;
   title: string;
@@ -13,6 +19,10 @@ export interface PaperResponse {
   publicationYear: number | null;
   filePath: string;
   categories: CategoryResponse[];
+  uploadedById: string;
+  uploadedByName: string;
+  canEdit: boolean;
+  authorInfo?: AuthorInfo | null;
 }
 
 export interface ExploreFilters {
@@ -30,11 +40,13 @@ export interface ApiResponse<T> {
 
 export interface PaginatedResponse<T> {
   content: T[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+  };
   totalElements: number;
   totalPages: number;
-  size: number;
-  number: number;
-  first: boolean;
   last: boolean;
+  first: boolean;
   numberOfElements: number;
 }

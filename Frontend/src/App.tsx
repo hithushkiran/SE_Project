@@ -11,6 +11,8 @@ import ProfilePage from './pages/ProfilePage';
 import ExplorePage from './pages/ExplorePage';
 import CommentSection from './pages/CommentSection';
 import PaperDetailsPage from './pages/PaperDetailsPage';
+import MyPublicationsPage from './pages/MyPublicationsPage';
+import UserProfilePage from './pages/UserProfilePage';
 import NotificationsPage from './pages/NotificationsPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminPanel from './components/admin/AdminPanel';
@@ -87,12 +89,21 @@ const AppContent: React.FC = () => {
         />
 
         <Route 
+          path="/profile/:userId" 
+          element={
+            <ProtectedRoute>
+              <UserProfilePage />
+              </ProtectedRoute>
+          }
+          />
+        <Route
           path="/summary" 
           element={
             <ProtectedRoute>
               <PDFSummarizer />
             </ProtectedRoute>
-          } 
+          }
+           
         />
         
         <Route 
@@ -123,6 +134,16 @@ const AppContent: React.FC = () => {
         />
         
         <Route 
+
+          path="/my-publications" 
+          element={
+            <ProtectedRoute>
+              <MyPublicationsPage />
+            </ProtectedRoute>
+          } />
+
+
+          <Route 
           path="/publish" 
           element={
             <ProtectedRoute>

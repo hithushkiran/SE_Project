@@ -30,6 +30,10 @@ public class Paper {
     @Column
     private String author;
 
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "uploaded_by", columnDefinition = "BINARY(16)")
+    private User uploadedBy;
+
     @Column(name = "file_path", nullable = false)
     private String filePath;
 

@@ -19,7 +19,7 @@ public interface PaperRepository extends JpaRepository<Paper, UUID> {
     @Query("SELECT DISTINCT p FROM Paper p " +
             "LEFT JOIN p.categories c " +
             "WHERE (:query IS NULL OR LOWER(p.title) LIKE LOWER(CONCAT('%', :query, '%')) " +
-            "       OR LOWER(p.abstractText) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+            "      OR LOWER(p.abstractText) LIKE LOWER(CONCAT('%', :query, '%'))) " +
             "AND (:categoryIds IS NULL OR c.id IN :categoryIds) " +
             "AND (:year IS NULL OR p.publicationYear = :year) " +
             "AND (:author IS NULL OR LOWER(p.author) LIKE LOWER(CONCAT('%', :author, '%'))) " +
@@ -43,13 +43,19 @@ public interface PaperRepository extends JpaRepository<Paper, UUID> {
     // Find papers by author name (case-insensitive)
     List<Paper> findByAuthorContainingIgnoreCase(String author);
 
+    // Find papers by uploader
+    Page<Paper> findByUploadedBy_IdOrderByUploadedAtDesc(UUID userId, Pageable pageable);
+
+    long countByUploadedBy_Id(UUID userId);
+
     // Find paper by ID with categories eagerly loaded
     @Query("SELECT p FROM Paper p LEFT JOIN FETCH p.categories WHERE p.id = :id")
     java.util.Optional<Paper> findByIdWithCategories(@Param("id") UUID id);
+
     // Admin moderation
     Page<Paper> findByStatus(PaperStatus status, Pageable pageable);
     long countByStatus(PaperStatus status);
 
-    // Changed method: now author is a String
+    // find by author
     List<Paper> findByAuthor(String authorId);
 }

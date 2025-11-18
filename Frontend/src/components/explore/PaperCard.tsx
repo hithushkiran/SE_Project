@@ -105,7 +105,19 @@ const PaperCard: React.FC<PaperCardProps> = ({ paper, onClick }) => {
         <div className="paper-meta">
           <div className="paper-author">
             <span className="author-label">Author:</span>
-            <span className="author-name">{paper.author}</span>
+            {paper.authorInfo?.id ? (
+              <Link
+                to={`/profile/${paper.authorInfo.id}`}
+                className="author-link"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {paper.authorInfo.name || paper.authorInfo.maskedEmail || paper.author || 'Unknown Author'}
+              </Link>
+            ) : (
+              <span className="author-name">
+                {paper.authorInfo?.name || paper.authorInfo?.maskedEmail || paper.author || 'Unknown Author'}
+              </span>
+            )}
           </div>
           
           {paper.publicationYear && (
