@@ -18,37 +18,24 @@ public class PaperResponseService {
 
     @Transactional(readOnly = true)
     public PaperResponse toPaperResponse(Paper paper) {
-        System.out.println("=== toPaperResponse ===");
-        System.out.println("Paper ID: " + paper.getId());
-        System.out.println("Paper title: " + paper.getTitle());
-        
         // Ensure filePath is in the correct format for static access
         String filePath = paper.getFilePath();
         if (filePath != null && !filePath.startsWith("uploads/")) {
             filePath = "uploads/" + filePath;
         }
         
-        // Safely access categories with defensive copy to avoid ConcurrentModificationException
+        // Handle categories safely - catch CME and return empty set if it occurs
         Set<Category> categories = new HashSet<>();
         try {
             if (paper.getCategories() != null) {
-                // Create defensive copy immediately without checking size first
-                categories = new HashSet<>(paper.getCategories());
-                System.out.println("Categories copied successfully: " + categories.size());
-                if (!categories.isEmpty()) {
-                    categories.forEach(cat -> System.out.println("  - Category: " + cat.getName() + " (ID: " + cat.getId() + ")"));
-                }
-            } else {
-                System.out.println("paper.getCategories() is null");
+                categories.addAll(paper.getCategories());
             }
         } catch (Exception e) {
-            // If lazy loading fails, just use empty set
-            System.out.println("Exception while accessing categories: " + e.getMessage());
-            e.printStackTrace();
+            // Silently catch CME and return empty categories
             categories = new HashSet<>();
         }
         
-        PaperResponse response = new PaperResponse(
+        return new PaperResponse(
                 paper.getId(),
                 paper.getTitle(),
                 paper.getAuthor(),
@@ -58,9 +45,6 @@ public class PaperResponseService {
                 filePath,
                 categories
         );
-        
-        System.out.println("PaperResponse created with " + response.getCategories().size() + " categories");
-        return response;
     }
 
     @Transactional(readOnly = true)

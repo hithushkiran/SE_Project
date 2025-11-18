@@ -13,7 +13,8 @@ const PublishPage = () => {
     author: '',
     date: '',
     file: null,
-    categoryIds: []
+    categoryIds: [],
+    abstractText: ''
   });
   const [categories, setCategories] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -115,6 +116,11 @@ const PublishPage = () => {
         uploadData.append('bookId', formData.bookId);
       }
 
+      // Add abstract text if provided
+      if (formData.abstractText && formData.abstractText.trim()) {
+        uploadData.append('abstractText', formData.abstractText.trim());
+      }
+
       // Add category IDs if any are selected
       const hasCategoryIds = formData.categoryIds && formData.categoryIds.length > 0;
       console.log('Has category IDs:', hasCategoryIds);
@@ -127,8 +133,8 @@ const PublishPage = () => {
       }
 
       const endpoint = hasCategoryIds
-        ? '/api/papers/upload-with-categories' 
-        : '/api/papers/upload';
+        ? '/papers/upload-with-categories' 
+        : '/papers/upload';
       
       console.log('Using endpoint:', endpoint);
 
@@ -254,6 +260,20 @@ const PublishPage = () => {
               placeholder="Enter author name"
               required
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="abstractText">Abstract / Description:</label>
+            <textarea
+              id="abstractText"
+              name="abstractText"
+              value={formData.abstractText}
+              onChange={handleInputChange}
+              placeholder="Enter a brief description or abstract of your research paper (optional)"
+              rows="6"
+              className="abstract-textarea"
+            />
+            <small>Provide a summary of your research (200-500 words recommended)</small>
           </div>
 
           <div className="form-group">

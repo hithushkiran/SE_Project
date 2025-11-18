@@ -160,25 +160,52 @@ public class PaperService {
      */
     @Transactional
     public Paper assignCategoriesToPaper(UUID paperId, List<UUID> categoryIds) {
+        System.out.println("=== assignCategoriesToPaper START ===");
+        System.out.println("Paper ID: " + paperId);
+        System.out.println("Category IDs to assign: " + categoryIds);
+        
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new ResourceNotFoundException("Paper not found with id: " + paperId));
+
+        System.out.println("Paper found: " + paper.getTitle());
+        System.out.println("Current categories count: " + paper.getCategories().size());
 
         if (categoryIds == null || categoryIds.isEmpty()) {
             // Clear categories if empty list provided
             paper.getCategories().clear();
+            System.out.println("Cleared all categories");
         } else {
             // Get categories from database
             List<Category> categories = categoryRepository.findByIdIn(categoryIds);
+            System.out.println("Found " + categories.size() + " categories in database");
+            
             if (categories.size() != categoryIds.size()) {
+                System.out.println("ERROR: Some categories not found!");
+                System.out.println("Requested: " + categoryIds.size() + ", Found: " + categories.size());
                 throw new IllegalArgumentException("Some categories were not found");
+            }
+
+            // Log each category being added
+            for (Category cat : categories) {
+                System.out.println("  - Category: " + cat.getName() + " (ID: " + cat.getId() + ")");
             }
 
             // Clear existing categories and assign new ones
             paper.getCategories().clear();
             paper.getCategories().addAll(new HashSet<>(categories));
+            System.out.println("Categories added to paper object. New count: " + paper.getCategories().size());
         }
 
-        return paperRepository.save(paper);
+        Paper savedPaper = paperRepository.save(paper);
+        paperRepository.flush(); // Force immediate write to database
+        System.out.println("Paper saved and flushed to database");
+        
+        // Verify save by re-fetching
+        Paper verifiedPaper = paperRepository.findByIdWithCategories(paperId).orElseThrow();
+        System.out.println("VERIFICATION: Re-fetched paper has " + verifiedPaper.getCategories().size() + " categories");
+        
+        System.out.println("=== assignCategoriesToPaper END ===");
+        return savedPaper;
     }
 
     /**
