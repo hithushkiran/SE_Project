@@ -34,11 +34,6 @@ export interface UserResponse {
   website?: string;
   avatarUrl?: string;
   emailVerified: boolean;
-<<<<<<< HEAD
-  role: string;
-  interests?: Category[];
-=======
   role: 'USER' | 'RESEARCHER' | 'ADMIN';
   createdAt?: string;
->>>>>>> dev_v2
 }

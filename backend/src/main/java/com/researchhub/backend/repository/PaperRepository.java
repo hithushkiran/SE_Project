@@ -43,16 +43,13 @@ public interface PaperRepository extends JpaRepository<Paper, UUID> {
     // Find papers by author name (case-insensitive)
     List<Paper> findByAuthorContainingIgnoreCase(String author);
 
-<<<<<<< HEAD
     // Find paper by ID with categories eagerly loaded
     @Query("SELECT p FROM Paper p LEFT JOIN FETCH p.categories WHERE p.id = :id")
     java.util.Optional<Paper> findByIdWithCategories(@Param("id") UUID id);
-=======
     // Admin moderation
     Page<Paper> findByStatus(PaperStatus status, Pageable pageable);
     long countByStatus(PaperStatus status);
 
     // Changed method: now author is a String
     List<Paper> findByAuthor(String authorId);
->>>>>>> dev_v2
 }
