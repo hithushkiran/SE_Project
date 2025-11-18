@@ -1,5 +1,4 @@
 
-
 package com.researchhub.backend.dto;
 
 import com.researchhub.backend.model.Category;
@@ -29,6 +28,7 @@ public class PaperResponse {
     private UUID uploadedById;
     private String uploadedByName;
     private boolean canEdit;
+    private AuthorInfo authorInfo;
 
     public PaperResponse(UUID id, String title, String author, String abstractText,
                          LocalDateTime uploadedAt, Integer publicationYear,
@@ -49,4 +49,3 @@ public class PaperResponse {
         this.canEdit = canEdit;
     }
 }
-

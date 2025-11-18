@@ -44,6 +44,7 @@ public interface PaperRepository extends JpaRepository<Paper, UUID> {
 
     // Find papers by uploader
     Page<Paper> findByUploadedBy_IdOrderByUploadedAtDesc(UUID userId, Pageable pageable);
-}
 
+    long countByUploadedBy_Id(UUID userId);
+}
 
