@@ -23,12 +23,36 @@ CREATE TABLE IF NOT EXISTS papers (
     publication_year INT,
     uploaded_at DATETIME NOT NULL,
     file_path VARCHAR(500) NOT NULL,
+    uploaded_by BINARY(16),
+    CONSTRAINT fk_papers_user FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE SET NULL
     status ENUM('PENDING', 'APPROVED', 'REJECTED') NOT NULL DEFAULT 'PENDING',
     rejection_reason TEXT,
     reviewed_at DATETIME,
     reviewed_by BINARY(16),
     FOREIGN KEY (reviewed_by) REFERENCES users(id)
 );
+
+-- Ensure legacy databases also have the uploader column + constraint
+ALTER TABLE papers
+    ADD COLUMN IF NOT EXISTS uploaded_by BINARY(16);
+
+SET @fk_exists = (
+    SELECT COUNT(*)
+    FROM information_schema.TABLE_CONSTRAINTS
+    WHERE CONSTRAINT_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'papers'
+      AND CONSTRAINT_NAME = 'fk_papers_user'
+);
+
+SET @ddl = IF(
+    @fk_exists = 0,
+    'ALTER TABLE papers ADD CONSTRAINT fk_papers_user FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE SET NULL',
+    'SELECT \"fk_papers_user already present\"'
+);
+
+PREPARE stmt FROM @ddl;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
 
 -- Paper-Categories junction table (if not exists)
 CREATE TABLE IF NOT EXISTS paper_categories (

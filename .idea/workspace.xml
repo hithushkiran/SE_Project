@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="2c7d6652-3236-48ae-93b4-6bd75051bbc2" name="Changes" comment="" />
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
@@ -99,6 +101,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+<<<<<<< HEAD
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="35fLEZR4SDdMqJF6wMcdcIi2yBC" />
+=======
   <component name="GitHubPullRequestSearchHistory"><![CDATA[{
   "lastFilter": {
     "state": "OPEN",
@@ -115,12 +123,32 @@
   "associatedIndex": 8
 }]]></component>
   <component name="ProjectId" id="35exfIXu1HRs0itGDC6C28zf3ve" />
+>>>>>>> dev_v2
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+<<<<<<< HEAD
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "sahanbackup",
+    "last_opened_file_path": "C:/Users/user/Desktop/Final Projexct/SE_Project"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2c7d6652-3236-48ae-93b4-6bd75051bbc2" name="Changes" comment="" />
+      <created>1763496069055</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1763496069055</updated>
+    </task>
+    <servers />
+  </component>
+=======
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "Hithush-backup",
@@ -163,4 +191,5 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+>>>>>>> dev_v2
 </project>

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import EditProfileModal from '../components/EditProfileModal';
 import './ProfilePage.css';
 
 const ProfilePage: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // Remove unnecessary tabs and stats for now - keep it simple
@@ -68,6 +70,16 @@ const ProfilePage: React.FC = () => {
             <span className="stat-number">0</span>
             <span className="stat-label">Contributions</span>
           </div>
+        </div>
+
+        {/* My Publications Section */}
+        <div className="profile-actions-section">
+          <button 
+            className="my-publications-btn"
+            onClick={() => navigate('/my-publications')}
+          >
+            📚 My Publications
+          </button>
         </div>
 
         {/* Edit Profile Modal */}
